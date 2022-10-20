@@ -1,4 +1,7 @@
 import styled from "styled-components"
+import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
+import { IconContext } from "react-icons";
+import { useState } from "react";
 
 export default function Post({
     username,
@@ -7,10 +10,25 @@ export default function Post({
     post_url,
     metadata
 }) {
+
+    const [like, setLike] = useState(false)
+
+    function likeOrDeslike(value) {
+        value ? setLike(true) : setLike(false)
+    }
+
     return (
         <PostBox>
             <UserAndLikes>
                 <UserImage src = {picture_url}/>
+                <IconContext.Provider value={{className: "global-class-name" }}>
+                    <Likes>
+                        {like ? 
+                        <IoIosHeart onClick = {() => likeOrDeslike(false)}/> :
+                        <IoIosHeartEmpty onClick = {()=> likeOrDeslike(true)}/>}
+                        <LikesCount>13 likes</LikesCount>
+                    </Likes>
+                </IconContext.Provider>
             </UserAndLikes>
             <Contents>
                 <UserName>{username}</UserName>
@@ -52,7 +70,27 @@ const UserImage = styled.img`
     margin: 20px 20px 0 20px;
 `
 const UserAndLikes = styled.div`
-
+    display: flex;
+    justify-content: top;
+    align-items: center;
+    flex-direction: column;
+    
+    && .global-class-name {
+        margin: 30px 0 15px 0;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+    }
+`
+const Likes = styled(UserAndLikes)`
+    min-height: 80px;
+`
+const LikesCount = styled.p`
+    font-family: Arial, Helvetica, sans-serif; //trocar pra Lato
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 13px;
+    color: #FFFFFF;
 `
 const Contents = styled.div`
     margin-top: 20px;
