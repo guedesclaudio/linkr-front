@@ -11,4 +11,8 @@ function postSignUp(body) {
   return axios.post(`${baseUrlTest}/signup`, body);
 }
 
-export { getPostsData, postSignUp };
+function postSignIn(body) {
+  return axios.post(`${baseUrlTest}/signin`, body);
+}
+
+export { getPostsData, postSignUp, postSignIn };
