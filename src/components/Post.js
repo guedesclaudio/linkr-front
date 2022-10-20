@@ -1,49 +1,61 @@
 import styled from "styled-components"
+import PostContents from "./PostContents.js"
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 import { IconContext } from "react-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { sendLikeOrDeslike } from "../services/services";
+
 
 export default function Post({
     username,
     picture_url,
+    postId,
     body,
     post_url,
-    metadata
+    metadata,
+    liked,
+    likesCount,
+    callApi,
+    setCallApi
 }) {
 
-    const [like, setLike] = useState(false)
+    const [like, setLike] = useState(liked)
+    const likesIsOne = likesCount === "1" ? "1 curtida" : ` ${likesCount} curtidas`
+    const [heartColor, setHeartColor] = useState("white")
+    
+    useEffect(() => {
+        liked ? setHeartColor("red") : setHeartColor("white")
+    }, [])
+    
 
     function likeOrDeslike(value) {
-        value ? setLike(true) : setLike(false)
+        if (value) {
+            setLike(true)
+            setHeartColor("red")
+            setTimeout(() => setCallApi(callApi + 1), 250)
+            sendLikeOrDeslike({postId, likeValue: true, userId: 1}) //userId de teste
+            return
+        }
+        setLike(false)
+        setHeartColor("white")
+        setTimeout(() => setCallApi(callApi + 1), 250)
+        sendLikeOrDeslike({postId, likeValue: false, userId: 1}) //userId de teste
     }
 
     return (
         <PostBox>
             <UserAndLikes>
                 <UserImage src = {picture_url}/>
-                <IconContext.Provider value={{className: "global-class-name" }}>
+                <IconContext.Provider value={{color: `${heartColor}`, className: "class-like"}}>
                     <Likes>
                         {like ? 
                         <IoIosHeart onClick = {() => likeOrDeslike(false)}/> :
                         <IoIosHeartEmpty onClick = {()=> likeOrDeslike(true)}/>}
-                        <LikesCount>13 likes</LikesCount>
+                        <LikesCount>{!likesCount ? "0 curtidas" : likesIsOne}</LikesCount>
                     </Likes>
                 </IconContext.Provider>
             </UserAndLikes>
-            <Contents>
-                <UserName>{username}</UserName>
-                <Body>{body}</Body>
-                <a href = {post_url} target = "_blank">
-                    <Link>
-                        <LinkContents>
-                            <Title>{metadata.title}</Title>
-                            <Description>{metadata.description}</Description>
-                            <Url>{post_url}</Url>
-                        </LinkContents>
-                        <LinkImage src = {metadata.image}/>
-                    </Link>
-                </a>
-            </Contents>
+            <PostContents username = {username} body = {body} post_url = {post_url} metadata = {metadata}/>
         </PostBox>
     )
 }
@@ -75,9 +87,9 @@ const UserAndLikes = styled.div`
     align-items: center;
     flex-direction: column;
     
-    && .global-class-name {
+    && .class-like {
         margin: 30px 0 15px 0;
-        color: white;
+        color: ${props => props.color};
         font-size: 20px;
         cursor: pointer;
     }
@@ -86,90 +98,9 @@ const Likes = styled(UserAndLikes)`
     min-height: 80px;
 `
 const LikesCount = styled.p`
-    font-family: Arial, Helvetica, sans-serif; //trocar pra Lato
+    font-family: 'Lato', sans-serif;
     font-size: 13px;
     font-weight: 400;
     line-height: 13px;
     color: #FFFFFF;
-`
-const Contents = styled.div`
-    margin-top: 20px;
-    margin-right: 20px;
-    margin-bottom: 20px;;
-    width: 82%;
-    min-height: 180px;
-    box-sizing: border-box;
-`
-const UserName = styled.h1`
-    font-family: Arial, Helvetica, sans-serif; //trocar pra Lato
-    font-size: 19px;
-    font-weight: 400;
-    line-height: 23px;
-    color: #FFFFFF;
-    margin-bottom: 6px;
-`
-const Body = styled(UserName)`
-    font-size: 17px;
-    color: #B7B7B7;
-`
-const Link = styled.div`
-    box-sizing: border-box;
-    width: 503px;
-    height: 155px;
-    border: 1px solid #4D4D4D;
-    border-radius: 11px;
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: top;
-    cursor: pointer;
-
-    @media (max-width: 650px) {
-        width: 100%;
-        height: 115px;
-    }
-`
-const LinkContents = styled.div`
-    margin-left: 20px;
-    margin-top: 20px;
-
-    @media (max-width: 650px) {
-        margin-left: 10px;
-    }
-`
-const Title = styled.h1`
-    font-family: Arial, Helvetica, sans-serif; //trocar pra Lato;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 19px;
-    text-align: left;
-    color: #CECECE;
-    margin-bottom: 10px;
-
-    @media (max-width: 650px) {
-        font-size: 10px;
-    }
-`
-const Description = styled(Title)`
-    color: #9B9595;
-    font-size: 11px;
-    line-height: 13px;
-
-    @media (max-width: 650px) {
-        font-size: 8px;
-        line-height: 10px;
-    }
-`
-const Url = styled(Description)`
-    color: #CECECE;
-`
-const LinkImage = styled.img`
-    width: 153.44px;
-    height: 153px;
-    border-radius: 0px 12px 13px 0px;
-
-    @media (max-width: 650px) {
-        width: 30%;
-        height: 113px;
-    }
 `
