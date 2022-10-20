@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getPostsData } from "../services/services";
 import Post from "./Post";
+import { useEffect, useState, useContext } from "react";
+import { getPostsData } from "../services/services";
+import { UserContext } from "../contexts/UserContext";
 
 export default function Posts() {
 
-    const [posts, setPosts] = useState([])
+    const { posts, setPosts } = useContext(UserContext);
     const [message, setMessage] = useState("Loading...")
     const [callApi, setCallApi] = useState(true)
-    const [render, setRender] = useState(0)
 
     useEffect(async ()=> {
         try {
