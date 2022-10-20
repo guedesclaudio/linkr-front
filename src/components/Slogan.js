@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export default function LogoWrapper({ children }) {
+export default function Slogan({ children }) {
   return <Wrapper>{children}</Wrapper>;
 }
 

@@ -32,7 +32,7 @@ const Wrapper = styled.div`
     font-size: 26px;
     font-weight: 700;
     margin-bottom: 14px;
-    color: #9f9f9f;
+    color: #000000;
   }
 
   input:focus {
@@ -69,6 +69,7 @@ const Wrapper = styled.div`
     text-underline-offset: 6px;
     margin-top: 20px;
     color: #ffffff;
+    cursor: pointer;
   }
 
   @media (max-width: 460px) {

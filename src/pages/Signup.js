@@ -1,11 +1,15 @@
 import styled from "styled-components";
 import logo from "../assets/img/logo.png";
-import { useState } from "react";
 import FormWrapper from "../components/FormWrapper";
-import LogoWrapper from "../components/LogoWrapper";
+import Slogan from "../components/Slogan";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { postSignUp } from "../services/services";
 
 export default function Signup() {
   const [form, setForm] = useState({});
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const navigate = useNavigate();
 
   function handleForm({ value, name }) {
     setForm({
@@ -13,14 +17,26 @@ export default function Signup() {
       [name]: value,
     });
   }
-  async function sendForm() {}
+  async function sendForm() {
+    const body = { ...form };
+    setButtonDisabled(true);
+    try {
+      await postSignUp(body);
+      alert("Usuário criado com sucesso!");
+      navigate("/");
+    } catch (error) {
+      alert(JSON.stringify(error.response.data));
+      console.log(error);
+      setButtonDisabled(false);
+    }
+  }
 
   return (
     <PageWrapper>
-      <LogoWrapper>
+      <Slogan>
         <img src={logo} alt="Logo" />
         <h1>save, share and discover the best links on the web</h1>
-      </LogoWrapper>
+      </Slogan>
       <FormWrapper>
         <form
           onSubmit={(e) => {
@@ -48,7 +64,7 @@ export default function Signup() {
           ></input>
           <input
             placeholder="username"
-            name="name"
+            name="username"
             type="text"
             required
             onChange={(e) => {
@@ -64,8 +80,8 @@ export default function Signup() {
               handleForm({ name: e.target.name, value: e.target.value });
             }}
           ></input>
-          <button>Sign Up</button>
-          <p>Switch back to log in</p>
+          <button disabled={buttonDisabled}>Sign Up</button>
+          <p onClick={() => navigate("/")}>Switch back to log in</p>
         </form>
       </FormWrapper>
     </PageWrapper>
