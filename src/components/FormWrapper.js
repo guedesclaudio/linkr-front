@@ -12,13 +12,18 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
 
   form {
     display: flex;
     flex-direction: column;
     width: 100%;
     align-items: center;
-    margin-top: -100px;
+    position: absolute;
+    top: 300px;
+    @media (max-width: 460px) {
+      top: 50px;
+    }
   }
 
   input {
@@ -75,9 +80,5 @@ const Wrapper = styled.div`
   @media (max-width: 460px) {
     width: 100vw;
     height: calc(100vh - 180px);
-
-    form {
-      margin-top: -340px;
-    }
   }
 `;
