@@ -58,6 +58,9 @@ a {
 * {
   box-sizing: border-box;
 }
+body {
+	background-color: #333333;
+}
 `;
 
 export default GlobalStyle;
