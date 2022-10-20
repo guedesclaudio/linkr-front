@@ -27,8 +27,12 @@ export default function Signin() {
       setUserData({ token: response.data.token });
       navigate("/home");
     } catch (error) {
-      alert(JSON.stringify(error.response.data));
       console.log(error);
+      if (error.message) {
+        alert(JSON.stringify(error.message));
+      } else if (error.response.data) {
+        alert(JSON.stringify(error.response.data));
+      }
       setButtonDisabled(false);
     }
   }
