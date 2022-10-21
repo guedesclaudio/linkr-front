@@ -15,4 +15,11 @@ function postSignIn(body) {
   return axios.post(`${baseUrlTest}/signin`, body);
 }
 
-export { getPostsData, postSignUp, postSignIn };
+function verifyToken(token) {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return axios.get(`${baseUrlTest}/sessions`, config);
+}
+
+export { getPostsData, postSignUp, postSignIn, verifyToken };
