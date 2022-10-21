@@ -20,12 +20,12 @@ export default function Post({
     setCallApi,
     messageToolTip
 }) {
-
+    
     const [like, setLike] = useState(liked)
     const [heartColor, setHeartColor] = useState("white")
     const likesIsOne = likesCount === "1" ? "1 curtida" : ` ${likesCount} curtidas`
-    const config = {headers: {"Authorization": `Bearer 35deb70c-60ba-43dd-9f8f-4b3c74ba248c`}}
-    const { userData } = useContext(UserContext);
+    const { userData } = useContext(UserContext)
+    const config = {headers: {"Authorization": `Bearer ${userData.token}`}}
     
     
     useEffect(() => {
@@ -38,13 +38,13 @@ export default function Post({
             setLike(true)
             setHeartColor("red")
             setTimeout(() => setCallApi(callApi + 1), 250)
-            sendLikeOrDeslike({postId, likeValue: true, config}) //autenticar
+            sendLikeOrDeslike({postId, likeValue: true, config})
             return
         }
         setLike(false)
         setHeartColor("white")
         setTimeout(() => setCallApi(callApi + 1), 250)
-        sendLikeOrDeslike({postId, likeValue: false, config}) //autenticar
+        sendLikeOrDeslike({postId, likeValue: false, config})
     }
 
     return (
@@ -60,7 +60,7 @@ export default function Post({
                         </Likes>
                     </IconContext.Provider>
                     <ReactTooltip id={messageToolTip} place="bottom" effect="float" type="light">
-                        <p>{messageToolTip}</p>
+                        <Message>{messageToolTip}</Message>
                     </ReactTooltip>
             </UserAndLikes>
             <PostContents username = {username} body = {body} post_url = {post_url} metadata = {metadata}/>
@@ -114,5 +114,7 @@ const LikesCount = styled.p`
     cursor: pointer;
 `
 const Message = styled(LikesCount)`
-    margin-top: 10px;
+    color: #505050;
+    font-weight: 700;
+;
 `

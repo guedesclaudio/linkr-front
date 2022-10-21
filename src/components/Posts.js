@@ -9,7 +9,7 @@ export default function Posts() {
     const { posts, setPosts, userData } = useContext(UserContext);
     const [message, setMessage] = useState("Loading...")
     const [callApi, setCallApi] = useState(true)
-    const config = {headers: {"Authorization": `Bearer 35deb70c-60ba-43dd-9f8f-4b3c74ba248c`}}
+    const config = {headers: {"Authorization": `Bearer ${userData.token}`}}
 
     useEffect(async ()=> {
         try {
