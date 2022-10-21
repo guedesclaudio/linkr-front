@@ -6,13 +6,14 @@ import { UserContext } from "../contexts/UserContext";
 
 export default function Posts() {
 
-    const { posts, setPosts } = useContext(UserContext);
+    const { posts, setPosts, userData } = useContext(UserContext);
     const [message, setMessage] = useState("Loading...")
     const [callApi, setCallApi] = useState(true)
+    const config = {headers: {"Authorization": `Bearer a8e5aa37-457d-4447-ad79-983195b07630`}}
 
     useEffect(async ()=> {
         try {
-            const response = await getPostsData({userId: 1}) //userId de teste
+            const response = await getPostsData(config) //aunteticar
             
             if (response.data.length === 0) {
                 setMessage("There are no posts yet")
