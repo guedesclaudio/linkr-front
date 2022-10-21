@@ -3,12 +3,15 @@ import logo from "../assets/img/logo.png";
 import { IconContext } from "react-icons";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { useState } from "react";
+import Search from "./Search.js";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
     <Wrapper>
       <img src={logo} alt="logo" />
+
+      <Search />
 
       <LogoutWrapper>
         <IconContext.Provider

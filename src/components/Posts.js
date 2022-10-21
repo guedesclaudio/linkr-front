@@ -5,13 +5,16 @@ import { getPostsData } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 
 export default function Posts() {
-  const { posts, setPosts } = useContext(UserContext);
+  const { posts, setPosts, userData } = useContext(UserContext);
   const [message, setMessage] = useState("Loading...");
   const [callApi, setCallApi] = useState(true);
+  const config = {
+    headers: { Authorization: `Bearer a8e5aa37-457d-4447-ad79-983195b07630` },
+  };
 
   useEffect(async () => {
     try {
-      const response = await getPostsData({ userId: 1 }); //userId de teste
+      const response = await getPostsData(config); //aunteticar
 
       if (response.data.length === 0) {
         setMessage("There are no posts yet");
@@ -26,36 +29,33 @@ export default function Posts() {
   }, [callApi]);
 
   return (
-    <>
-      <Container>
-        {posts.length > 0 ? (
-          posts.map((value, index) => (
-            <Post
-              key={index}
-              username={value.username}
-              picture_url={value.picture_url}
-              postId={value.id}
-              body={value.body}
-              post_url={value.post_url}
-              metadata={value.metadata}
-              liked={value.liked}
-              likesCount={value.likesCount}
-              callApi={callApi}
-              setCallApi={setCallApi}
-            />
-          ))
-        ) : (
-          <LoadMessage>{message}</LoadMessage>
-        )}
-      </Container>
-    </>
+    <Container>
+      {posts.length > 0 ? (
+        posts.map((value, index) => (
+          <Post
+            key={index}
+            username={value.username}
+            picture_url={value.picture_url}
+            postId={value.id}
+            body={value.body}
+            post_url={value.post_url}
+            metadata={value.metadata}
+            liked={value.liked}
+            likesCount={value.likesCount}
+            callApi={callApi}
+            setCallApi={setCallApi}
+          />
+        ))
+      ) : (
+        <LoadMessage>{message}</LoadMessage>
+      )}
+    </Container>
   );
 }
 
 const Container = styled.div`
   width: 611px;
   margin: 100px auto;
-
   @media (max-width: 650px) {
     width: 100vw;
   }
