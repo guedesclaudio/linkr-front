@@ -3,7 +3,6 @@ import Post from "./Post";
 import { useEffect, useState, useContext } from "react";
 import { getPostsData } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
-import TopBar from "./TopBar";
 
 export default function Posts() {
   const { posts, setPosts } = useContext(UserContext);
@@ -28,7 +27,6 @@ export default function Posts() {
 
   return (
     <>
-      <TopBar />
       <Container>
         {posts.length > 0 ? (
           posts.map((value, index) => (
