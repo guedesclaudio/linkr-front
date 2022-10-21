@@ -2,16 +2,25 @@ import styled from "styled-components";
 import logo from "../assets/img/logo.png";
 import FormWrapper from "../components/FormWrapper";
 import Slogan from "../components/Slogan";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { postSignIn } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
+import verifyStoredToken from "../utils/verifyStoredToken";
 
 export default function Signin() {
   const { setUserData } = useContext(UserContext);
   const [form, setForm] = useState({});
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const navigate = useNavigate();
+
+  const storedToken = verifyStoredToken();
+  useEffect(() => {
+    if (storedToken) {
+      setUserData({ token: storedToken });
+      navigate("/home");
+    }
+  }, []);
 
   function handleForm({ value, name }) {
     setForm({
@@ -24,13 +33,12 @@ export default function Signin() {
     setButtonDisabled(true);
     try {
       const response = await postSignIn(body);
+      localStorage.setItem("token", JSON.stringify(response.data.token));
       setUserData({ token: response.data.token });
       navigate("/home");
     } catch (error) {
       console.log(error);
-      if (error.message) {
-        alert(JSON.stringify(error.message));
-      } else if (error.response.data) {
+      if (error.response.data) {
         alert(JSON.stringify(error.response.data));
       }
       setButtonDisabled(false);

@@ -8,7 +8,6 @@ function getPostsData(config) {
 }
 
 function sendLikeOrDeslike({postId, likeValue, config}) {
-  console.log(config)
   return axios.post(`${baseUrlTest}/likes/${postId}`, {likeValue}, config) //pegar config
 }
 
@@ -20,4 +19,12 @@ function postSignIn(body) {
   return axios.post(`${baseUrlTest}/signin`, body);
 }
 
-export { getPostsData, sendLikeOrDeslike, postSignUp, postSignIn };
+function verifyToken(token) {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return axios.get(`${baseUrlTest}/sessions`, config);
+}
+
+
+export { getPostsData, sendLikeOrDeslike, postSignUp, postSignIn, verifyToken };
