@@ -9,7 +9,7 @@ export default function Posts() {
     const { posts, setPosts, userData } = useContext(UserContext);
     const [message, setMessage] = useState("Loading...")
     const [callApi, setCallApi] = useState(true)
-    const config = {headers: {"Authorization": `Bearer a8e5aa37-457d-4447-ad79-983195b07630`}}
+    const config = {headers: {"Authorization": `Bearer 35deb70c-60ba-43dd-9f8f-4b3c74ba248c`}}
 
     useEffect(async ()=> {
         try {
@@ -33,7 +33,8 @@ export default function Posts() {
             posts.map((value, index) => <Post key = {index} 
             username = {value.username} picture_url = {value.picture_url} postId = {value.id}
             body = {value.body} post_url = {value.post_url} metadata = {value.metadata} 
-            liked = {value.liked} likesCount = {value.likesCount} callApi = {callApi} setCallApi = {setCallApi}/>) :
+            liked = {value.liked} likesCount = {value.likesCount} messageToolTip = {value.messageToolTip} 
+            callApi = {callApi} setCallApi = {setCallApi}/>) :
             <LoadMessage>{message}</LoadMessage>}
         </Container>
     )
