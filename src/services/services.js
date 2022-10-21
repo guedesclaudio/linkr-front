@@ -3,8 +3,12 @@ import axios from "axios";
 const baseUrlTest = "http://localhost:5000"; //url de teste
 const baseUrlProduction = "https://linkr-backend-api.herokuapp.com"; //url de producao
 
-function getPostsData() {
-  return axios.get(`${baseUrlTest}/timeline`); //pegar config
+function getPostsData({ userId }) {
+  return axios.get(`${baseUrlTest}/timeline/${userId}`); //pegar config
+}
+
+function sendLikeOrDeslike({ postId, likeValue, userId }) {
+  return axios.post(`${baseUrlTest}/likes/${postId}`, { userId, likeValue }); //pegar config
 }
 
 function postSignUp(body) {
@@ -22,4 +26,4 @@ function verifyToken(token) {
   return axios.get(`${baseUrlTest}/sessions`, config);
 }
 
-export { getPostsData, postSignUp, postSignIn, verifyToken };
+export { getPostsData, sendLikeOrDeslike, postSignUp, postSignIn, verifyToken };
