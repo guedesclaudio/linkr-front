@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import PostContents from "./PostContents.js"
+import ReactTooltip from 'react-tooltip';
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 import { IconContext } from "react-icons";
 import { useEffect, useState, useContext } from "react";
@@ -16,14 +17,16 @@ export default function Post({
     liked,
     likesCount,
     callApi,
-    setCallApi
+    setCallApi,
+    messageToolTip
 }) {
-
+    
     const [like, setLike] = useState(liked)
-    const likesIsOne = likesCount === "1" ? "1 curtida" : ` ${likesCount} curtidas`
     const [heartColor, setHeartColor] = useState("white")
-    const config = {headers: {"Authorization": `Bearer a8e5aa37-457d-4447-ad79-983195b07630`}}
-    const { userData } = useContext(UserContext);
+    const likesIsOne = likesCount === "1" ? "1 curtida" : ` ${likesCount} curtidas`
+    const { userData } = useContext(UserContext)
+    const config = {headers: {"Authorization": `Bearer ${userData.token}`}}
+    
     
     useEffect(() => {
         liked ? setHeartColor("red") : setHeartColor("white")
@@ -35,27 +38,30 @@ export default function Post({
             setLike(true)
             setHeartColor("red")
             setTimeout(() => setCallApi(callApi + 1), 250)
-            sendLikeOrDeslike({postId, likeValue: true, config}) //autenticar
+            sendLikeOrDeslike({postId, likeValue: true, config})
             return
         }
         setLike(false)
         setHeartColor("white")
         setTimeout(() => setCallApi(callApi + 1), 250)
-        sendLikeOrDeslike({postId, likeValue: false, config}) //autenticar
+        sendLikeOrDeslike({postId, likeValue: false, config})
     }
 
     return (
         <PostBox>
             <UserAndLikes>
                 <UserImage src = {picture_url}/>
-                <IconContext.Provider value={{color: `${heartColor}`, className: "class-like"}}>
-                    <Likes>
-                        {like ? 
-                        <IoIosHeart onClick = {() => likeOrDeslike(false)}/> :
-                        <IoIosHeartEmpty onClick = {()=> likeOrDeslike(true)}/>}
-                        <LikesCount>{!likesCount ? "0 curtidas" : likesIsOne}</LikesCount>
-                    </Likes>
-                </IconContext.Provider>
+                    <IconContext.Provider value={{color: `${heartColor}`, className: "class-like"}}>
+                        <Likes>
+                            {like ? 
+                            <IoIosHeart onClick = {() => likeOrDeslike(false)}/> :
+                            <IoIosHeartEmpty onClick = {()=> likeOrDeslike(true)}/>}
+                            <LikesCount data-tip data-for={messageToolTip}>{!likesCount ? "0 curtidas" : likesIsOne}</LikesCount>
+                        </Likes>
+                    </IconContext.Provider>
+                    <ReactTooltip id={messageToolTip} place="bottom" effect="float" type="light">
+                        <Message>{messageToolTip}</Message>
+                    </ReactTooltip>
             </UserAndLikes>
             <PostContents username = {username} body = {body} post_url = {post_url} metadata = {metadata}/>
         </PostBox>
@@ -105,4 +111,10 @@ const LikesCount = styled.p`
     font-weight: 400;
     line-height: 13px;
     color: #FFFFFF;
+    cursor: pointer;
+`
+const Message = styled(LikesCount)`
+    color: #505050;
+    font-weight: 700;
+;
 `

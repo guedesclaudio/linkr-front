@@ -35,7 +35,7 @@ export default function Signin() {
       const response = await postSignIn(body);
       localStorage.setItem("token", JSON.stringify(response.data.token));
       setUserData({ token: response.data.token });
-      navigate("/home");
+      navigate("/timeline");
     } catch (error) {
       console.log(error);
       if (error.response.data) {
