@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { postSearchUser } from "../services/services";
 import SearchUser from "./SearchUser";
+import { DebounceInput } from "react-debounce-input";
 
 export default function Search() {
   const [search, setSearch] = useState("");
@@ -30,13 +31,15 @@ export default function Search() {
   return (
     <Wrapper>
       <BoxSearch>
-        <input
+        <DebounceInput
           placeholder="Search for people"
           type="text"
           name="search"
           value={search}
+          debounceTimeout={300}
+          minLength={3}
           onChange={(e) => setSearch(e.target.value)}
-        ></input>
+        ></DebounceInput>
       </BoxSearch>
       {list.map((value, index) => (
         <SearchUser
