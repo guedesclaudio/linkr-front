@@ -1,26 +1,34 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { postSearchUser } from "../services/services";
+import SearchUser from "./SearchUser";
 
 export default function Search() {
   const [search, setSearch] = useState("");
+  const [list, setList] = useState([]);
 
   async function sendSearch() {
-    try {
-      const promise = await postSearchUser({ search });
-      console.log(promise.data);
-    } catch (error) {
-      alert(JSON.stringify(error.response.data));
-      console.log(error);
+    if (search.length > 2) {
+      try {
+        const promise = await postSearchUser({ search });
+        setList(promise.data);
+      } catch (error) {
+        alert(JSON.stringify(error.response.data));
+        console.log(error);
+      }
+    } else {
+      setList([]);
     }
   }
+
+  console.log(list);
 
   useEffect(() => {
     sendSearch();
   }, [search]);
 
   return (
-    <>
+    <Wrapper>
       <BoxSearch>
         <input
           placeholder="Search for people"
@@ -30,11 +38,24 @@ export default function Search() {
           onChange={(e) => setSearch(e.target.value)}
         ></input>
       </BoxSearch>
-      ;
-    </>
+      {list.map((value, index) => (
+        <SearchUser
+          key={index}
+          userId={value.id}
+          username={value.username}
+          picture_url={value.picture_url}
+        />
+      ))}
+    </Wrapper>
   );
 }
 
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin-top: 22px;
+`;
 const BoxSearch = styled.form`
   input {
     background-color: #ffffff;

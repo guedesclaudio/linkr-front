@@ -18,7 +18,6 @@ function postSignUp(body) {
 function postSignIn(body) {
   return axios.post(`${baseUrlTest}/signin`, body);
 }
-
 function postSearchUser(search) {
   return axios.post(`${baseUrlTest}/search`, search);
 }
