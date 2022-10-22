@@ -5,7 +5,7 @@ import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { useContext, useState } from "react";
 import { postLogout } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,8 +27,9 @@ export default function Navbar() {
 
   return (
     <Wrapper>
-      <img src={logo} alt="logo" />
-
+      <Link to={"/timeline"}>
+        <img src={logo} alt="logo" />
+      </Link>
       <LogoutWrapper>
         <IconContext.Provider
           value={{ color: `white`, className: "menu-opener" }}

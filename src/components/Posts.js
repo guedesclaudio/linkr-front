@@ -6,13 +6,14 @@ import { UserContext } from "../contexts/UserContext";
 
 export default function Posts() {
 
-    const { posts, setPosts } = useContext(UserContext);
+    const { posts, setPosts, userData } = useContext(UserContext);
     const [message, setMessage] = useState("Loading...")
     const [callApi, setCallApi] = useState(true)
+    const config = {headers: {"Authorization": `Bearer ${userData.token}`}}
 
     useEffect(async ()=> {
         try {
-            const response = await getPostsData({userId: 1}) //userId de teste
+            const response = await getPostsData(config) 
             
             if (response.data.length === 0) {
                 setMessage("There are no posts yet")
@@ -29,10 +30,11 @@ export default function Posts() {
     return (
         <Container>
             {posts.length > 0 ? 
-            posts.map((value, index) => <Post key = {index} 
-            username = {value.username} picture_url = {value.picture_url} postId = {value.id}
+            posts.map((value, index) => <Post key = {index} userId = {value.user_id}
+            username = {value.owner_post} picture_url = {value.picture_url} postId = {value.post_id}
             body = {value.body} post_url = {value.post_url} metadata = {value.metadata} 
-            liked = {value.liked} likesCount = {value.likesCount} callApi = {callApi} setCallApi = {setCallApi}/>) :
+            liked = {value.liked} likesCount = {value.likesCount} messageToolTip = {value.messageToolTip} 
+            callApi = {callApi} setCallApi = {setCallApi}/>) :
             <LoadMessage>{message}</LoadMessage>}
         </Container>
     )

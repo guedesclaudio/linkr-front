@@ -81,7 +81,7 @@ export default function Signup() {
             }}
           ></input>
           <button disabled={buttonDisabled}>Sign Up</button>
-          <p onClick={() => navigate("/")}>Switch back to log in</p>
+          <p onClick={() => navigate("/home")}>Switch back to log in</p>
         </form>
       </FormWrapper>
     </PageWrapper>

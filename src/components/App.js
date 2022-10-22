@@ -14,7 +14,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Signin />} />
             <Route path="/sign-up" element={<Signup />} />
-            <Route path="/home" element={<Home />} />
+            <Route path="/timeline" element={<Home />} />
           </Routes>
         </BrowserRouter>
       </UserStorage>

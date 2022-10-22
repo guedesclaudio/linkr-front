@@ -34,6 +34,7 @@ export default function Signin() {
   }
   async function sendForm() {
     const body = { ...form };
+    console.log(body);
     setButtonDisabled(true);
     try {
       const response = await postSignIn(body);
@@ -43,7 +44,7 @@ export default function Signin() {
         token: response.data.token,
         userImage: response.data.picture_url,
       });
-      navigate("/home");
+      navigate("/timeline");
     } catch (error) {
       console.log(error);
       if (error.response.data) {
