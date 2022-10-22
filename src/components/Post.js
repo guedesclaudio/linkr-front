@@ -8,6 +8,7 @@ import { sendLikeOrDeslike } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 
 export default function Post({
+    userId,
     username,
     picture_url,
     postId,
@@ -20,7 +21,7 @@ export default function Post({
     setCallApi,
     messageToolTip
 }) {
-    
+    console.log(userId)
     const [like, setLike] = useState(liked)
     const [heartColor, setHeartColor] = useState("white")
     const likesIsOne = likesCount === "1" ? "1 curtida" : ` ${likesCount} curtidas`
