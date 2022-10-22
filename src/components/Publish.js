@@ -12,7 +12,7 @@ export default function Publish () {
     });
     const [isDisabled, setIsDisabled] = useState(false);
     const [thereWasError, setThereWasError] = useState(false);
-    const { setPosts, userData, setMessage, userImage } = useContext(UserContext);
+    const { setPosts, userData, setMessage } = useContext(UserContext);
     
     function handleForm (e) {
         setForm({
@@ -62,7 +62,7 @@ export default function Publish () {
 
     return (
         <PostBox isPublish={true}>
-            <UserImage src={userImage} isPublish={true} />
+            <UserImage src={userData.userImage} isPublish={true} />
             <PostContent onSubmit={submitForm}>
                 <Question>What are you going to share today?</Question>
                 <InputPost content='url'

@@ -82,6 +82,7 @@ const PostBox = styled.div`
     @media (max-width: 650px) {
         width: 100vw;
         min-height: 232px;
+        border-radius: 0;
     }
 `
 const UserImage = styled.img`
