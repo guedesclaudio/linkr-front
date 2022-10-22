@@ -23,7 +23,7 @@ export default function Signup() {
     try {
       await postSignUp(body);
       alert("Usuário criado com sucesso!");
-      navigate("/");
+      navigate("/home");
     } catch (error) {
       alert(JSON.stringify(error.response.data));
       console.log(error);
@@ -81,7 +81,7 @@ export default function Signup() {
             }}
           ></input>
           <button disabled={buttonDisabled}>Sign Up</button>
-          <p onClick={() => navigate("/")}>Switch back to log in</p>
+          <p onClick={() => navigate("/home")}>Switch back to log in</p>
         </form>
       </FormWrapper>
     </PageWrapper>
