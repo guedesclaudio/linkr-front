@@ -6,6 +6,8 @@ import { useContext, useState } from "react";
 import { postLogout } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate, Link } from "react-router-dom";
+import Search from "./SearchBox.js";
+import SearchMobile from "./SearchBox.js";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -26,47 +28,83 @@ export default function Navbar() {
   }
 
   return (
-    <Wrapper>
-      <Link to={"/timeline"}>
-        <img src={logo} alt="logo" />
-      </Link>
-      <LogoutWrapper>
-        <IconContext.Provider
-          value={{ color: `white`, className: "menu-opener" }}
-        >
-          {!menuOpen ? (
-            <BiChevronUp onClick={() => setMenuOpen(true)} />
-          ) : (
-            <BiChevronDown onClick={() => setMenuOpen(false)} />
-          )}
-          {/* imagem de teste até o banco estar conectado */}
-          <img
-            onClick={() => {
-              if (!menuOpen) {
-                setMenuOpen(true);
-              } else {
-                setMenuOpen(false);
-              }
-            }}
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxoUpstZ_lEJcIvOD8tYul0tml2GTfNr_wL3qF0k3Q9bzE5t9msqCaOzPOBmx3Fo0EEz8&usqp=CAU"
-            alt=""
-          />
-        </IconContext.Provider>
-        <LogoutBox isMenuOpen={!menuOpen}>
-          <p
-            onClick={() => {
-              if (window.confirm("Are you sure you want to logout?")) {
-                logout();
-              }
-            }}
+    <>
+      <Wrapper>
+        <Link to={"/timeline"}>
+          <img src={logo} alt="logo" />
+        </Link>
+        <SearchDesktop>
+          <Search />
+        </SearchDesktop>
+        <LogoutWrapper>
+          <IconContext.Provider
+            value={{ color: `white`, className: "menu-opener" }}
           >
-            Logout
-          </p>
-        </LogoutBox>
-      </LogoutWrapper>
-    </Wrapper>
+            {!menuOpen ? (
+              <BiChevronUp onClick={() => setMenuOpen(true)} />
+            ) : (
+              <BiChevronDown onClick={() => setMenuOpen(false)} />
+            )}
+            {/* imagem de teste até o banco estar conectado */}
+            <img
+              onClick={() => {
+                if (!menuOpen) {
+                  setMenuOpen(true);
+                } else {
+                  setMenuOpen(false);
+                }
+              }}
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxoUpstZ_lEJcIvOD8tYul0tml2GTfNr_wL3qF0k3Q9bzE5t9msqCaOzPOBmx3Fo0EEz8&usqp=CAU"
+              alt=""
+            />
+          </IconContext.Provider>
+          <LogoutBox isMenuOpen={!menuOpen}>
+            <p
+              onClick={() => {
+                if (window.confirm("Are you sure you want to logout?")) {
+                  logout();
+                }
+              }}
+            >
+              Logout
+            </p>
+          </LogoutBox>
+        </LogoutWrapper>
+      </Wrapper>
+      <SearchMobileBox>
+        <SearchMobile />
+      </SearchMobileBox>
+    </>
   );
 }
+
+const SearchDesktop = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  z-index: 1;
+
+  @media (max-width: 850px) {
+    display: none;
+  }
+`;
+
+const SearchMobileBox = styled.div`
+  width: 100%;
+  height: 100%;
+  display: none;
+  position: fixed;
+  top: 72px;
+  z-index: 1;
+
+  @media (max-width: 850px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
 
 const Wrapper = styled.div`
   width: 100vw;
