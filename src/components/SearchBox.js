@@ -67,7 +67,12 @@ const BoxSearch = styled.form`
     font-size: 19px;
     align-items: center;
     padding: 0 15px;
+
+    @media (max-width: 850px) {
+      width: 90vw;
+    }
   }
+
   input::placeholder {
     color: #c6c6c6;
   }

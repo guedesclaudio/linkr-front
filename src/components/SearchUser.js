@@ -23,11 +23,13 @@ const Wrapper = styled.div`
     height: 39px !important;
     border-radius: 50%;
     object-fit: cover;
+    cursor: pointer;
   }
   h1 {
     font-size: 19px;
     font-weight: 400;
     color: #515151;
     margin: 0px 10px;
+    cursor: pointer;
   }
 `;
