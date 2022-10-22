@@ -3,7 +3,7 @@ import logo from "../assets/img/logo.png";
 import FormWrapper from "../components/FormWrapper";
 import Slogan from "../components/Slogan";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useRouteLoaderData } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { postSignIn } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 import verifyStoredToken from "../utils/verifyStoredToken";

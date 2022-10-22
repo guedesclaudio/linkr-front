@@ -8,7 +8,7 @@ import { UserContext } from "../contexts/UserContext";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { userData, userImage } = useContext(UserContext);
+  const { userImage } = useContext(UserContext);
   return (
     <Wrapper>
       <Link to = {"/timeline"}>
