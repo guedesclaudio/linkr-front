@@ -3,6 +3,7 @@ import { insertPost } from "../services/services";
 import styled from "styled-components";
 import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext.js";
+import { getPostsData } from "../services/services";
 
 export default function Publish () {
     const [form, setForm] = useState({
@@ -11,7 +12,7 @@ export default function Publish () {
     });
     const [isDisabled, setIsDisabled] = useState(false);
     const [thereWasError, setThereWasError] = useState(false);
-    const { token } = useContext(UserContext);
+    const { setPosts, userData, setMessage } = useContext(UserContext);
     
     function handleForm (e) {
         return setForm({
@@ -25,13 +26,27 @@ export default function Publish () {
         setIsDisabled(true);
     
         try {
-            await insertPost(form, token);
+            await insertPost(form, userData.token);
+
+            setThereWasError(false);
             setIsDisabled(false);
-                setForm({
-                    post_url: "",
-                    body: ""
-                });
-            //getPosts
+            setForm({
+                post_url: "",
+                body: ""
+            });
+            
+            try {
+                const response = await getPostsData(userData.token);
+                
+                if (response.data.length === 0) {
+                    setMessage("There are no posts yet");
+                }
+                setPosts(response.data);
+                
+            } catch (error) {
+                setMessage("An error occured while trying to fetch the posts, please refresh the page");
+                console.log(error);
+            }
             
         } catch (error) {
             setThereWasError(true);
@@ -41,7 +56,7 @@ export default function Publish () {
 
     return (
         <PostBox isPublish={true}>
-            <UserImage></UserImage>
+            <UserImage isPublish={true} src={userData.userImage}></UserImage>
             <PostContent onSubmit={submitForm}>
                 <Question>What are you going to share today?</Question>
                 <InputPost content='url'
@@ -88,6 +103,10 @@ const Question = styled.div`
     line-height: 24px;
     color: #707070;
     margin-bottom: 10px;
+
+    @media (max-width: 650px) {
+        text-align: center;
+    }
 `;
 
 const InputPost = styled.input`
@@ -98,8 +117,7 @@ const InputPost = styled.input`
     border-radius: 5px;
     background-color: #EFEFEF;
 
-    display: flex;
-    justify-content: flex-start;
+    position: relative;
 
     &::placeholder {
         font-family: 'Lato', sans-serif;
@@ -108,6 +126,10 @@ const InputPost = styled.input`
         line-height: 18px;
         color: #949494;
         text-align: start;
+
+        position: absolute;
+        top: 5px;
+        left: 13px;
     }
 `;
 
@@ -128,8 +150,22 @@ const ButtonPublish = styled.button`
     position: absolute;
     bottom: 0;
     right: 0;
+
+    @media (max-width: 650px) {
+        height: 22px;
+        font-size: 13px;
+        line-height: 15.6px;
+    }
 `;
 
 const ErrorMessage = styled.div`
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 16.8px;
+    color: #d14539;
 
+    position: absolute;
+    bottom: 7.1px;
+    right: 127px;
 `;

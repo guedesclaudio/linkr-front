@@ -2,9 +2,9 @@ import styled from "styled-components"
 import PostContents from "./PostContents.js"
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 import { IconContext } from "react-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { sendLikeOrDeslike } from "../services/services";
-
+import { UserContext } from "../contexts/UserContext";
 
 export default function Post({
     username,
@@ -22,6 +22,8 @@ export default function Post({
     const [like, setLike] = useState(liked)
     const likesIsOne = likesCount === "1" ? "1 curtida" : ` ${likesCount} curtidas`
     const [heartColor, setHeartColor] = useState("white")
+    const config = {headers: {"Authorization": `Bearer a8e5aa37-457d-4447-ad79-983195b07630`}}
+    const { userData } = useContext(UserContext);
     
     useEffect(() => {
         liked ? setHeartColor("red") : setHeartColor("white")
@@ -33,13 +35,13 @@ export default function Post({
             setLike(true)
             setHeartColor("red")
             setTimeout(() => setCallApi(callApi + 1), 250)
-            sendLikeOrDeslike({postId, likeValue: true, userId: 1}) //userId de teste
+            sendLikeOrDeslike({postId, likeValue: true, config}) //autenticar
             return
         }
         setLike(false)
         setHeartColor("white")
         setTimeout(() => setCallApi(callApi + 1), 250)
-        sendLikeOrDeslike({postId, likeValue: false, userId: 1}) //userId de teste
+        sendLikeOrDeslike({postId, likeValue: false, config}) //autenticar
     }
 
     return (

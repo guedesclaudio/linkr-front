@@ -2,7 +2,7 @@ import GlobalStyle from "../styles/globalStyles";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Signup from "../pages/Signup.js";
 import Signin from "../pages/Signin";
-import Timeline from "./Timeline";
+import Home from "../pages/Home";
 import { UserStorage } from "../contexts/UserContext";
 
 export default function App() {
@@ -14,7 +14,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Signin />} />
             <Route path="/sign-up" element={<Signup />} />
-            <Route path="/home" element={<Timeline />} />
+            <Route path="/home" element={<Home />} />
           </Routes>
         </BrowserRouter>
       </UserStorage>
