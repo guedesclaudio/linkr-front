@@ -40,12 +40,12 @@ export default function Navbar() {
           <IconContext.Provider
             value={{ color: `white`, className: "menu-opener" }}
           >
-            {!menuOpen ? (
+            {menuOpen ? (
               <BiChevronUp onClick={() => setMenuOpen(true)} />
             ) : (
               <BiChevronDown onClick={() => setMenuOpen(false)} />
             )}
-            {/* imagem de teste até o banco estar conectado */}
+            
             <img
               onClick={() => {
                 if (!menuOpen) {
@@ -54,7 +54,7 @@ export default function Navbar() {
                   setMenuOpen(false);
                 }
               }}
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxoUpstZ_lEJcIvOD8tYul0tml2GTfNr_wL3qF0k3Q9bzE5t9msqCaOzPOBmx3Fo0EEz8&usqp=CAU"
+              src={userData.userImage}
               alt=""
             />
           </IconContext.Provider>
@@ -117,6 +117,7 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
+  z-index: 2;
 
   img {
     width: 96px;

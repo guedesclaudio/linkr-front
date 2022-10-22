@@ -9,7 +9,7 @@ import { UserContext } from "../contexts/UserContext";
 import verifyStoredToken from "../utils/verifyStoredToken";
 
 export default function Signin() {
-  const { setUserData } = useContext(UserContext);
+  const { setUserData, setUserImage } = useContext(UserContext);
   const [form, setForm] = useState({});
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export default function Signin() {
         token: userStored.token,
         userImage: userStored.picture_url,
       });
-      navigate("/home");
+      navigate("/timeline");
     } else localStorage.setItem("user", JSON.stringify(""));
   }, []);
 

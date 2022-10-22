@@ -1,4 +1,4 @@
-import Posts from "../components/Posts";
+import TimeLine from "../components/Timeline";
 import Navbar from "../components/Navbar";
 import { useContext, useEffect } from "react";
 import verifyStoredToken from "../utils/verifyStoredToken";
@@ -32,7 +32,7 @@ export default function Home() {
   return (
     <>
       <Navbar></Navbar>
-      <Posts></Posts>
+      <TimeLine></TimeLine>
     </>
   );
 }

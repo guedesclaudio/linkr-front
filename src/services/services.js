@@ -22,6 +22,10 @@ function postSearchUser(search) {
   return axios.post(`${baseUrlTest}/search`, search);
 }
 
+function insertPost(body, token) {
+  return axios.post(`${baseUrlTest}/posts`, body, token);
+}
+
 function verifyToken(token) {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
@@ -44,4 +48,5 @@ export {
   verifyToken,
   postLogout,
   postSearchUser,
+  insertPost
 };
