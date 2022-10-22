@@ -13,7 +13,7 @@ export default function Posts() {
 
     useEffect(async ()=> {
         try {
-            const response = await getPostsData(config) //aunteticar
+            const response = await getPostsData(config) 
             
             if (response.data.length === 0) {
                 setMessage("There are no posts yet")
@@ -31,7 +31,7 @@ export default function Posts() {
         <Container>
             {posts.length > 0 ? 
             posts.map((value, index) => <Post key = {index} userId = {value.user_id}
-            username = {value.owner_post} picture_url = {value.picture_url} postId = {value.id}
+            username = {value.owner_post} picture_url = {value.picture_url} postId = {value.post_id}
             body = {value.body} post_url = {value.post_url} metadata = {value.metadata} 
             liked = {value.liked} likesCount = {value.likesCount} messageToolTip = {value.messageToolTip} 
             callApi = {callApi} setCallApi = {setCallApi}/>) :
