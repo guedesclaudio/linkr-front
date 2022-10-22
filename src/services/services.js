@@ -22,6 +22,10 @@ function postSearchUser(search) {
   return axios.post(`${baseUrlTest}/search`, search);
 }
 
+function insertPost(body, token) {
+  return axios.post(`${baseUrlTest}/posts`, body, token);
+}
+
 function verifyToken(token) {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
@@ -29,11 +33,20 @@ function verifyToken(token) {
   return axios.get(`${baseUrlTest}/sessions`, config);
 }
 
+function postLogout(token) {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return axios.post(`${baseUrlTest}/logout`, {}, config);
+}
+
 export {
   getPostsData,
   sendLikeOrDeslike,
   postSignUp,
   postSignIn,
-  postSearchUser,
   verifyToken,
+  postLogout,
+  postSearchUser,
+  insertPost
 };

@@ -9,17 +9,21 @@ import { UserContext } from "../contexts/UserContext";
 import verifyStoredToken from "../utils/verifyStoredToken";
 
 export default function Signin() {
-  const { setUserData } = useContext(UserContext);
+  const { setUserData, setUserImage } = useContext(UserContext);
   const [form, setForm] = useState({});
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const navigate = useNavigate();
 
-  const storedToken = verifyStoredToken();
-  useEffect(() => {
+  useEffect(async () => {
+    const storedToken = await verifyStoredToken();
     if (storedToken) {
-      setUserData({ token: storedToken });
-      navigate("/home");
-    }
+      const userStored = JSON.parse(localStorage.getItem("user"));
+      setUserData({
+        token: userStored.token,
+        userImage: userStored.picture_url,
+      });
+      navigate("/timeline");
+    } else localStorage.setItem("user", JSON.stringify(""));
   }, []);
 
   function handleForm({ value, name }) {
@@ -30,11 +34,16 @@ export default function Signin() {
   }
   async function sendForm() {
     const body = { ...form };
+    console.log(body);
     setButtonDisabled(true);
     try {
       const response = await postSignIn(body);
-      localStorage.setItem("token", JSON.stringify(response.data.token));
-      setUserData({ token: response.data.token });
+      console.log(response.data);
+      localStorage.setItem("user", JSON.stringify(response.data));
+      setUserData({
+        token: response.data.token,
+        userImage: response.data.picture_url,
+      });
       navigate("/timeline");
     } catch (error) {
       console.log(error);
