@@ -26,4 +26,18 @@ function verifyToken(token) {
   return axios.get(`${baseUrlTest}/sessions`, config);
 }
 
-export { getPostsData, sendLikeOrDeslike, postSignUp, postSignIn, verifyToken };
+function postLogout(token) {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return axios.post(`${baseUrlTest}/logout`, {}, config);
+}
+
+export {
+  getPostsData,
+  sendLikeOrDeslike,
+  postSignUp,
+  postSignIn,
+  verifyToken,
+  postLogout,
+};
