@@ -2,14 +2,18 @@ import styled from "styled-components";
 import logo from "../assets/img/logo.png";
 import { IconContext } from "react-icons";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { Link } from "react-router-dom";
+import { UserContext } from "../contexts/UserContext";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { userData, userImage } = useContext(UserContext);
   return (
     <Wrapper>
-      <img src={logo} alt="logo" />
-
+      <Link to = {"/timeline"}>
+        <img src={logo} alt="logo" />
+      </Link>
       <LogoutWrapper>
         <IconContext.Provider
           value={{ color: `white`, className: "menu-opener" }}
@@ -19,7 +23,7 @@ export default function Navbar() {
           ) : (
             <BiChevronDown onClick={() => setMenuOpen(false)} />
           )}
-          {/* imagem de teste até o banco estar conectado */}
+          
           <img
             onClick={() => {
               if (!menuOpen) {
@@ -28,7 +32,7 @@ export default function Navbar() {
                 setMenuOpen(false);
               }
             }}
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxoUpstZ_lEJcIvOD8tYul0tml2GTfNr_wL3qF0k3Q9bzE5t9msqCaOzPOBmx3Fo0EEz8&usqp=CAU"
+            src={userImage}
             alt=""
           />
         </IconContext.Provider>

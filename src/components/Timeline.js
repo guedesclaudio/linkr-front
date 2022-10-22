@@ -8,11 +8,11 @@ import Publish from "./Publish";
 export default function Timeline() {
     const { posts, setPosts, userData, message, setMessage } = useContext(UserContext);
     const [callApi, setCallApi] = useState(true)
-    const config = {headers: {"Authorization": `Bearer a8e5aa37-457d-4447-ad79-983195b07630`}}
+    const config = {headers: {"Authorization": `Bearer ${userData.token}`}}
 
     useEffect(async ()=> {
         try {
-            const response = await getPostsData(config) //aunteticar
+            const response = await getPostsData(config)
             
             if (response.data.length === 0) {
                 setMessage("There are no posts yet")
@@ -32,10 +32,11 @@ export default function Timeline() {
             <Publish></Publish>
             <Container>
                 {posts.length > 0 ? 
-                posts.map((value, index) => <Post key = {index} 
-                username = {value.username} picture_url = {value.picture_url} postId = {value.id}
+                posts.map((value, index) => <Post key = {index} userId = {value.user_id}
+                username = {value.owner_post} picture_url = {value.picture_url} postId = {value.post_id}
                 body = {value.body} post_url = {value.post_url} metadata = {value.metadata} 
-                liked = {value.liked} likesCount = {value.likesCount} callApi = {callApi} setCallApi = {setCallApi}/>) :
+                liked = {value.liked} likesCount = {value.likesCount} messageToolTip = {value.messageToolTip} 
+                callApi = {callApi} setCallApi = {setCallApi}/>) :
                 <LoadMessage>{message}</LoadMessage>}
             </Container>
         </TimelineWrapper>
@@ -47,6 +48,10 @@ const TimelineWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    @media (max-width: 650px) {
+        margin-top: 146px;
+    }
 `;
 
 const Title = styled.div`
@@ -67,7 +72,7 @@ const Title = styled.div`
 
 const Container = styled.div`
     width: 611px;
-    margin: 100px auto;
+    margin: 0px auto;
 
     @media (max-width: 650px) {
         width: 100vw;

@@ -3,13 +3,13 @@ import logo from "../assets/img/logo.png";
 import FormWrapper from "../components/FormWrapper";
 import Slogan from "../components/Slogan";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useRouteLoaderData } from "react-router-dom";
 import { postSignIn } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 import verifyStoredToken from "../utils/verifyStoredToken";
 
 export default function Signin() {
-  const { setUserData } = useContext(UserContext);
+  const { setUserData, setUserImage } = useContext(UserContext);
   const [form, setForm] = useState({});
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const navigate = useNavigate();
@@ -34,8 +34,9 @@ export default function Signin() {
     try {
       const response = await postSignIn(body);
       localStorage.setItem("token", JSON.stringify(response.data.token));
-      setUserData({ token: response.data.token, userImage: response.data.user_image });
-      navigate("/home");
+      setUserData({ token: response.data.token });
+      setUserImage(response.data.user_image);
+      navigate("/timeline");
     } catch (error) {
       console.log(error);
       if (error.response.data) {

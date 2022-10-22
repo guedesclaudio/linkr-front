@@ -30,5 +30,4 @@ function verifyToken(token) {
   return axios.get(`${baseUrlTest}/sessions`, config);
 }
 
-
 export { getPostsData, sendLikeOrDeslike, postSignUp, postSignIn, insertPost, verifyToken };

@@ -15,6 +15,7 @@ const PostBox = styled.div`
     @media (max-width: 650px) {
         width: 100vw;
         min-height: ${props => props.isPublish ? '164px' : '232px'};
+        border-radius: 0;
     }
 `;
 
@@ -22,6 +23,7 @@ const UserImage = styled.img`
     width: 50px;
     height: 50px;
     border-radius: 26.5px;
+    object-fit: cover;
 
     @media (max-width: 650px) {
         display: ${props => props.isPublish ? 'none' : 'flex'};

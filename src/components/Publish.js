@@ -12,21 +12,26 @@ export default function Publish () {
     });
     const [isDisabled, setIsDisabled] = useState(false);
     const [thereWasError, setThereWasError] = useState(false);
-    const { setPosts, userData, setMessage } = useContext(UserContext);
+    const { setPosts, userData, setMessage, userImage } = useContext(UserContext);
     
     function handleForm (e) {
-        return setForm({
+        setForm({
             ...form,
             [e.target.name]: e.target.value
         });
     }
     
     async function submitForm(e) {
-        e.preventDefaul();
+        e.preventDefault();
         setIsDisabled(true);
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userData.token}`
+            }}
+        console.log(form);
     
         try {
-            await insertPost(form, userData.token);
+            await insertPost(form, config);
 
             setThereWasError(false);
             setIsDisabled(false);
@@ -36,7 +41,7 @@ export default function Publish () {
             });
             
             try {
-                const response = await getPostsData(userData.token);
+                const response = await getPostsData(config);
                 
                 if (response.data.length === 0) {
                     setMessage("There are no posts yet");
@@ -54,9 +59,10 @@ export default function Publish () {
         }
     }
 
+
     return (
         <PostBox isPublish={true}>
-            <UserImage isPublish={true} src={userData.userImage}></UserImage>
+            <UserImage src={userImage} isPublish={true} />
             <PostContent onSubmit={submitForm}>
                 <Question>What are you going to share today?</Question>
                 <InputPost content='url'
@@ -64,7 +70,7 @@ export default function Publish () {
                     type='url'
                     value={form.post_url}
                     placeholder='http://...'
-                    onchange={handleForm}
+                    onChange={handleForm}
                     disabled={isDisabled}
                     ></InputPost>
                 <InputPost content='comment'
@@ -72,7 +78,7 @@ export default function Publish () {
                     type='text'
                     value={form.body}
                     placeholder='Awesome article about #javascript'
-                    onchange={handleForm}
+                    onChange={handleForm}
                     disabled={isDisabled}
                     ></InputPost >
                 <ButtonPublish type='submit' disabled={isDisabled}>
@@ -88,7 +94,7 @@ export default function Publish () {
     )
 }
 
-const PostContent = styled.div`
+const PostContent = styled.form`
     width: 503px;
     display: flex;
     flex-direction: column;
@@ -140,6 +146,7 @@ const ButtonPublish = styled.button`
     background-color: #1877F2;
     box-shadow: none;
     border: none;
+    cursor: pointer;
 
     color: white;
     font-family: 'Lato', sans-serif;
