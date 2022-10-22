@@ -23,7 +23,7 @@ export default function Signup() {
     try {
       await postSignUp(body);
       alert("Usuário criado com sucesso!");
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       alert(JSON.stringify(error.response.data));
       console.log(error);

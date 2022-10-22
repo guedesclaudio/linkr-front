@@ -2,24 +2,40 @@ import styled from "styled-components";
 import logo from "../assets/img/logo.png";
 import { IconContext } from "react-icons";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { postLogout } from "../services/services";
+import { UserContext } from "../contexts/UserContext";
+import { useNavigate, Link } from "react-router-dom";
 import Search from "./SearchBox.js";
 import SearchMobile from "./SearchBox.js";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { userData, setUserData } = useContext(UserContext);
+  const navigate = useNavigate();
+  const token =
+    userData.token || JSON.parse(localStorage.getItem("user")).token;
+
+  async function logout() {
+    try {
+      await postLogout(token);
+      setUserData({});
+      localStorage.setItem("user", JSON.stringify(""));
+      navigate("/");
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
   return (
     <>
       <Wrapper>
         <Link to={"/timeline"}>
           <img src={logo} alt="logo" />
         </Link>
-
         <SearchDesktop>
           <Search />
         </SearchDesktop>
-
         <LogoutWrapper>
           <IconContext.Provider
             value={{ color: `white`, className: "menu-opener" }}
@@ -43,7 +59,15 @@ export default function Navbar() {
             />
           </IconContext.Provider>
           <LogoutBox isMenuOpen={!menuOpen}>
-            <p onClick={() => alert("oi")}>Logout</p>
+            <p
+              onClick={() => {
+                if (window.confirm("Are you sure you want to logout?")) {
+                  logout();
+                }
+              }}
+            >
+              Logout
+            </p>
           </LogoutBox>
         </LogoutWrapper>
       </Wrapper>
@@ -146,5 +170,6 @@ const LogoutBox = styled.div`
     color: #ffffff;
     margin: 0 6px 6px 0;
     display: ${(props) => (props.isMenuOpen ? "none" : "inherit")};
+    cursor: pointer;
   }
 `;
