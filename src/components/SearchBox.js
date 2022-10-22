@@ -22,8 +22,6 @@ export default function Search() {
     }
   }
 
-  console.log(list);
-
   useEffect(() => {
     sendSearch();
   }, [search]);
@@ -37,10 +35,10 @@ export default function Search() {
           name="search"
           value={search}
           debounceTimeout={300}
-          minLength={3}
           onChange={(e) => setSearch(e.target.value)}
         ></DebounceInput>
       </BoxSearch>
+
       {list.map((value, index) => (
         <SearchUser
           key={index}
