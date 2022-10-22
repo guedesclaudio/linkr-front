@@ -1,11 +1,11 @@
 import { verifyToken } from "../services/services";
 
 export default async function verifyStoredToken() {
-  const tokenStored = JSON.parse(localStorage.getItem("token"));
+  const userStored = JSON.parse(localStorage.getItem("user"));
 
-  if (tokenStored) {
+  if (userStored) {
     try {
-      const response = await verifyToken(tokenStored);
+      const response = await verifyToken(userStored.token);
       return response.data.token;
     } catch (error) {
       console.log(error);
