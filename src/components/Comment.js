@@ -6,6 +6,7 @@ import { useRef, useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { postNewBody, deletePost, getPostsData } from "../services/services";
 import Modal from "react-modal";
+import ReactLoading from "react-loading";
 
 const customStyles = {
     content: {
@@ -37,6 +38,7 @@ export default function Comment ({ body, post_id, post_userId }) {
     const [isDisabled, setIsDisabled] = useState(false);
     const [isPublish, setIsPublish] = useState(false);
     const [modalIsOpen, setIsOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [send, setSend] = useState({
         body
@@ -81,9 +83,12 @@ export default function Comment ({ body, post_id, post_userId }) {
     }
 
     async function deleteThisPost () {
+        setIsLoading(true);
+
         try {
             await deletePost(userData.token, post_id);
             setIsOpen(false);
+            setIsLoading(false);
 
             const config = {
                 headers: {
@@ -105,6 +110,7 @@ export default function Comment ({ body, post_id, post_userId }) {
 
         } catch (error) {
             setIsOpen(false);
+            setIsLoading(false);
             alert("Could not delete post");
         }
     }
@@ -115,11 +121,17 @@ export default function Comment ({ body, post_id, post_userId }) {
             <Modal 
                 isOpen={modalIsOpen}
                 style={customStyles}>
-                <ModalTitle>Are you sure you want to delete this post?</ModalTitle>
-                <ModalButtons>
-                    <Cancel onClick={() => setIsOpen(false)}>No, go back</Cancel>
-                    <Submit onClick={deleteThisPost}>Yes, delete it</Submit>
-                </ModalButtons>
+                {isLoading ?
+                <ReactLoading type='balls' color='#ffffff' width='64px' height='64px' />
+                :
+                <>
+                    <ModalTitle>Are you sure you want to delete this post?</ModalTitle>
+                    <ModalButtons>
+                        <Cancel onClick={() => setIsOpen(false)}>No, go back</Cancel>
+                        <Submit onClick={deleteThisPost}>Yes, delete it</Submit>
+                    </ModalButtons>
+                </>
+                }
             </Modal>
             : ''
             }
@@ -221,4 +233,14 @@ const Cancel = styled.button`
 const Submit = styled(Cancel)`
     background-color: #1877f2;
     color: white;
+`;
+const LoadingWrapper = styled.div`
+    width: 597px;
+    height: 262px;
+    border-radius: 50px;
+    background: #333333;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
