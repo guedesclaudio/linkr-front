@@ -7,6 +7,8 @@ import { UserContext } from "../contexts/UserContext";
 import { postNewBody, deletePost, getPostsData } from "../services/services";
 import Modal from "react-modal";
 import ReactLoading from "react-loading";
+import { useNavigate } from "react-router-dom";
+import { ReactTagify } from "react-tagify";
 
 const customStyles = {
     content: {
@@ -33,6 +35,7 @@ const customStyles = {
 };
 
 export default function Comment ({ body, post_id, post_userId }) {
+    const navigate = useNavigate();
     const { userId, userData, setMessage, setPosts } = useContext(UserContext);
     const [isEditable, setIsEditable] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -152,8 +155,15 @@ export default function Comment ({ body, post_id, post_userId }) {
             </IconContext.Provider>
             : ''}
 
-            {!isEditable
-            ? <Body>{isPublish ? send.body : body}</Body>
+            {!isEditable ?
+            <Body>
+                <ReactTagify
+                    tagStyle={tagStyle}
+                    tagClicked={(tag) => navigate(`/hashtag/${tag.slice(1)}`)}
+                    >
+                    {isPublish ? send.body : body}
+                </ReactTagify>
+            </Body>
             : <EditableBody 
                 name='body'
                 type='text'

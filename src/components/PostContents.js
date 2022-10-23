@@ -30,6 +30,12 @@ export default function PostContents({
     )
 }
 
+const tagStyle = {
+  color: "#FFFFFF",
+  margin: "0px 2px",
+  cursor: "pointer",
+};
+
 const Contents = styled.div`
     margin-top: 20px;
     margin-right: 20px;
@@ -49,63 +55,63 @@ const UserName = styled.h1`
     margin-bottom: 6px;
 `;
 const Link = styled.div`
-    box-sizing: border-box;
-    width: 503px;
-    min-height: 155px;
-    border: 1px solid #4D4D4D;
-    border-radius: 11px;
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: top;
-    cursor: pointer;
+  box-sizing: border-box;
+  width: 503px;
+  min-height: 155px;
+  border: 1px solid #4d4d4d;
+  border-radius: 11px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: top;
+  cursor: pointer;
 
-    @media (max-width: 650px) {
-        width: 100%;
-        min-height: 115px;
-    }
+  @media (max-width: 650px) {
+    width: 100%;
+    min-height: 115px;
+  }
 `;
 const LinkContents = styled.div`
-    margin-left: 20px;
-    margin-top: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
 
-    @media (max-width: 650px) {
-        margin-left: 10px;
-    }
+  @media (max-width: 650px) {
+    margin-left: 10px;
+  }
 `;
 const Title = styled.h1`
-    font-family: 'Lato', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 19px;
-    text-align: left;
-    color: #CECECE;
-    margin-bottom: 10px;
+  font-family: "Lato", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19px;
+  text-align: left;
+  color: #cecece;
+  margin-bottom: 10px;
 
-    @media (max-width: 650px) {
-        font-size: 10px;
-    }
+  @media (max-width: 650px) {
+    font-size: 10px;
+  }
 `;
 const Description = styled(Title)`
-    color: #9B9595;
-    font-size: 11px;
-    line-height: 13px;
+  color: #9b9595;
+  font-size: 11px;
+  line-height: 13px;
 
-    @media (max-width: 650px) {
-        font-size: 8px;
-        line-height: 10px;
-    }
+  @media (max-width: 650px) {
+    font-size: 8px;
+    line-height: 10px;
+  }
 `;
 const Url = styled(Description)`
-    color: #CECECE;
+  color: #cecece;
 `;
 const LinkImage = styled.img`
-    width: 153.44px;
-    min-height: 153px;
-    border-radius: 0px 12px 13px 0px;
+  width: 153.44px;
+  min-height: 153px;
+  border-radius: 0px 12px 13px 0px;
 
-    @media (max-width: 650px) {
-        width: 30%;
-        min-height: 113px;
-    }
+  @media (max-width: 650px) {
+    width: 30%;
+    min-height: 113px;
+  }
 `;
