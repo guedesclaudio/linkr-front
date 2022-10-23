@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { ReactTagify } from "react-tagify";
 
 export default function PostContents({
   username,
@@ -14,7 +15,15 @@ export default function PostContents({
       <UserName onClick={() => navigate(`/users/${userId}`)}>
         {username}
       </UserName>
-      <Body>{body}</Body>
+      <Body>
+        <ReactTagify
+          tagStyle={tagStyle}
+          tagClicked={(tag) => navigate(`/hashtag/${tag.slice(1)}`)}
+        >
+          {body}
+        </ReactTagify>
+      </Body>
+
       <a href={post_url} target="_blank">
         <Link>
           <LinkContents>
@@ -28,6 +37,12 @@ export default function PostContents({
     </Contents>
   );
 }
+
+const tagStyle = {
+  color: "#FFFFFF",
+  margin: "0px 2px",
+  cursor: "pointer",
+};
 
 const Contents = styled.div`
   margin-top: 20px;
