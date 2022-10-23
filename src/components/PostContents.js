@@ -1,14 +1,20 @@
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
 
-export default function PostContents({ username, body, post_url, metadata }) {
+export default function PostContents({
+  username,
+  body,
+  post_url,
+  metadata,
+  userId,
+}) {
   const navigate = useNavigate();
-
   return (
     <Contents>
-      <UserName>{username}</UserName>
-
+      <UserName onClick={() => navigate(`/users/${userId}`)}>
+        {username}
+      </UserName>
       <Body>
         <ReactTagify
           tagStyle={tagStyle}
