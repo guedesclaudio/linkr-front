@@ -80,10 +80,11 @@ export default function Post({
       </UserAndLikes>
       <PostContents
         username={username}
-        userId={userId}
         body={body}
         post_url={post_url}
         metadata={metadata}
+        post_id={postId}
+        post_userId={userId}
       />
     </PostBox>
   );

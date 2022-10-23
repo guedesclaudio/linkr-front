@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrlTest = "http://localhost:5000"; //url de teste
+const baseUrlTest = "http://localhost:5001"; //url de teste
 const baseUrlProduction = "https://linkr-backend-api.herokuapp.com"; //url de producao
 
 function getPostsData(config) {
@@ -40,6 +40,26 @@ function postLogout(token) {
   return axios.post(`${baseUrlTest}/logout`, {}, config);
 }
 
+function postNewBody (token, post_id, body) {
+  const config = {
+    headers: { 
+      Authorization: `Bearer ${token}`,
+      PostId: post_id
+    },
+  };
+  return axios.put(`${baseUrlTest}/posts`, body, config);
+}
+
+function deletePost (token, post_id) {
+  const config = {
+    headers: { 
+      Authorization: `Bearer ${token}`,
+      PostId: post_id
+    },
+  };
+  return axios.delete(`${baseUrlTest}/posts`, config);
+}
+
 export {
   getPostsData,
   sendLikeOrDeslike,
@@ -48,5 +68,7 @@ export {
   verifyToken,
   postLogout,
   postSearchUser,
-  insertPost
+  insertPost,
+  postNewBody,
+  deletePost
 };

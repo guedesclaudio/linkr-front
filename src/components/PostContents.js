@@ -1,68 +1,55 @@
 import styled from "styled-components";
+import Comment from "./Comment";
 import { useNavigate } from "react-router-dom";
-import { ReactTagify } from "react-tagify";
 
 export default function PostContents({
-  username,
-  body,
-  post_url,
-  metadata,
-  userId,
+    username,
+    body,
+    post_url,
+    metadata,
+    post_id,
+    post_userId
 }) {
   const navigate = useNavigate();
-  return (
-    <Contents>
-      <UserName onClick={() => navigate(`/users/${userId}`)}>
-        {username}
-      </UserName>
-      <Body>
-        <ReactTagify
-          tagStyle={tagStyle}
-          tagClicked={(tag) => navigate(`/hashtag/${tag.slice(1)}`)}
-        >
-          {body}
-        </ReactTagify>
-      </Body>
+    return (
+        <Contents>
+            <UserName onClick={() => navigate(`/users/${post_userId}`)}>
+              {username}
+            </UserName>
 
-      <a href={post_url} target="_blank">
-        <Link>
-          <LinkContents>
-            <Title>{metadata.title}</Title>
-            <Description>{metadata.description}</Description>
-            <Url>{post_url}</Url>
-          </LinkContents>
-          <LinkImage src={metadata.image} />
-        </Link>
-      </a>
-    </Contents>
-  );
+            <Comment body={body} post_id={post_id} post_userId={post_userId} />
+            
+            <a href = {post_url} target = "_blank">
+                <Link>
+                    <LinkContents>
+                        <Title>{metadata.title}</Title>
+                        <Description>{metadata.description}</Description>
+                        <Url>{post_url}</Url>
+                    </LinkContents>
+                    <LinkImage src = {metadata.image}/>
+                </Link>
+            </a>
+        </Contents>
+    );
 }
 
-const tagStyle = {
-  color: "#FFFFFF",
-  margin: "0px 2px",
-  cursor: "pointer",
-};
-
 const Contents = styled.div`
-  margin-top: 20px;
-  margin-right: 20px;
-  margin-bottom: 20px;
-  width: 82%;
-  min-height: 180px;
-  box-sizing: border-box;
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;;
+    width: 82%;
+    min-height: 180px;
+    box-sizing: border-box;
+
+    position: relative;
 `;
 const UserName = styled.h1`
-  font-family: "Lato", sans-serif;
-  font-size: 19px;
-  font-weight: 400;
-  line-height: 23px;
-  color: #ffffff;
-  margin-bottom: 6px;
-`;
-const Body = styled(UserName)`
-  font-size: 17px;
-  color: #b7b7b7;
+    font-family: 'Lato', sans-serif;
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 23px;
+    color: #FFFFFF;
+    margin-bottom: 6px;
 `;
 const Link = styled.div`
   box-sizing: border-box;
