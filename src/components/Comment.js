@@ -4,7 +4,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import { BsFillPencilFill } from "react-icons/bs";
 import { useRef, useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { postNewBody } from "../services/services";
+import { postNewBody, deletePost, getPostsData } from "../services/services";
 import Modal from "react-modal";
 
 const customStyles = {
@@ -32,7 +32,7 @@ const customStyles = {
 };
 
 export default function Comment ({ body, post_id, post_userId }) {
-    const { userId, userData } = useContext(UserContext);
+    const { userId, userData, setMessage, setPosts } = useContext(UserContext);
     const [isEditable, setIsEditable] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
     const [isPublish, setIsPublish] = useState(false);
@@ -63,17 +63,11 @@ export default function Comment ({ body, post_id, post_userId }) {
             });
             setIsEditable(false);
 
-        } else if (e.key === "Enter") {
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${userData.token}`,
-                    PostId: post_id
-                }};
-            
+        } else if (e.key === "Enter") {            
             setIsDisabled(true);
             
             try {
-                await postNewBody(config, send);
+                await postNewBody(userData.token, post_id, send);
                 setIsEditable(false);
                 setIsDisabled(false);
                 setIsPublish(true);
@@ -86,8 +80,33 @@ export default function Comment ({ body, post_id, post_userId }) {
         }
     }
 
-    function deletePost () {
+    async function deleteThisPost () {
+        try {
+            await deletePost(userData.token, post_id);
+            setIsOpen(false);
 
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${userData.token}`
+                }};
+
+            try {
+                const response = await getPostsData(config);
+                
+                if (response.data.length === 0) {
+                    setMessage("There are no posts yet");
+                }
+                setPosts(response.data);
+                
+            } catch (error) {
+                setMessage("An error occured while trying to fetch the posts, please refresh the page");
+                console.log(error);
+            }
+
+        } catch (error) {
+            setIsOpen(false);
+            alert("Could not delete post");
+        }
     }
 
     return (
@@ -99,7 +118,7 @@ export default function Comment ({ body, post_id, post_userId }) {
                 <ModalTitle>Are you sure you want to delete this post?</ModalTitle>
                 <ModalButtons>
                     <Cancel onClick={() => setIsOpen(false)}>No, go back</Cancel>
-                    <Submit onClick={deletePost}>Yes, delete it</Submit>
+                    <Submit onClick={deleteThisPost}>Yes, delete it</Submit>
                 </ModalButtons>
             </Modal>
             : ''

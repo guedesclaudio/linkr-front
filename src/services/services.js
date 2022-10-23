@@ -40,8 +40,24 @@ function postLogout(token) {
   return axios.post(`${baseUrlTest}/logout`, {}, config);
 }
 
-function postNewBody (config, body) {
+function postNewBody (token, post_id, body) {
+  const config = {
+    headers: { 
+      Authorization: `Bearer ${token}`,
+      PostId: post_id
+    },
+  };
   return axios.put(`${baseUrlTest}/posts`, body, config);
+}
+
+function deletePost (token, post_id) {
+  const config = {
+    headers: { 
+      Authorization: `Bearer ${token}`,
+      PostId: post_id
+    },
+  };
+  return axios.delete(`${baseUrlTest}/posts`, config);
 }
 
 export {
@@ -53,5 +69,6 @@ export {
   postLogout,
   postSearchUser,
   insertPost,
-  postNewBody
+  postNewBody,
+  deletePost
 };
