@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import Comment from "./Comment";
+import { useNavigate } from "react-router-dom";
+import { ReactTagify } from "react-tagify";
 
 export default function PostContents({
     username,
@@ -9,10 +11,12 @@ export default function PostContents({
     post_id,
     post_userId
 }) {
-
+  const navigate = useNavigate();
     return (
         <Contents>
-            <UserName>{username}</UserName>
+            <UserName onClick={() => navigate(`/users/${userId}`)}>
+              {username}
+            </UserName>
 
             <Comment body={body} post_id={post_id} post_userId={post_userId} />
             
@@ -27,7 +31,7 @@ export default function PostContents({
                 </Link>
             </a>
         </Contents>
-    )
+    );
 }
 
 const tagStyle = {
