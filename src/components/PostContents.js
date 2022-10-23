@@ -1,8 +1,6 @@
 import styled from "styled-components";
 import Comment from "./Comment";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
-import { UserContext } from "../contexts/UserContext";
 
 export default function PostContents({
     username,
@@ -13,10 +11,9 @@ export default function PostContents({
     post_userId
 }) {
   const navigate = useNavigate();
-  const { userId } = useContext(UserContext);
     return (
         <Contents>
-            <UserName onClick={() => navigate(`/users/${userId}`)}>
+            <UserName onClick={() => navigate(`/users/${post_userId}`)}>
               {username}
             </UserName>
 
