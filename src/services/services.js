@@ -40,6 +40,10 @@ function postLogout(token) {
   return axios.post(`${baseUrlTest}/logout`, {}, config);
 }
 
+function postNewBody (config, body) {
+  return axios.put(`${baseUrlTest}/posts`, body, config);
+}
+
 export {
   getPostsData,
   sendLikeOrDeslike,
@@ -48,5 +52,6 @@ export {
   verifyToken,
   postLogout,
   postSearchUser,
-  insertPost
+  insertPost,
+  postNewBody
 };

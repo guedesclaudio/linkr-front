@@ -9,7 +9,7 @@ import { UserContext } from "../contexts/UserContext";
 import verifyStoredToken from "../utils/verifyStoredToken";
 
 export default function Signin() {
-  const { setUserData, setUserImage } = useContext(UserContext);
+  const { setUserData, setUserImage, setUserId } = useContext(UserContext);
   const [form, setForm] = useState({});
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ export default function Signin() {
       const userStored = JSON.parse(localStorage.getItem("user"));
       setUserData({
         token: userStored.token,
-        userImage: userStored.picture_url,
+        userImage: userStored.picture_url
       });
       navigate("/timeline");
     } else localStorage.setItem("user", JSON.stringify(""));
@@ -34,16 +34,17 @@ export default function Signin() {
   }
   async function sendForm() {
     const body = { ...form };
-    console.log(body);
+    //console.log(body);
     setButtonDisabled(true);
     try {
       const response = await postSignIn(body);
-      console.log(response.data);
+      //console.log(response.data);
       localStorage.setItem("user", JSON.stringify(response.data));
       setUserData({
         token: response.data.token,
         userImage: response.data.picture_url,
       });
+      setUserId(response.data.user_id);
       navigate("/timeline");
     } catch (error) {
       console.log(error);

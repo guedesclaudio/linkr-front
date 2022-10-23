@@ -27,8 +27,7 @@ export default function Publish () {
         const config = {
             headers: {
                 Authorization: `Bearer ${userData.token}`
-            }}
-        console.log(form);
+            }};
     
         try {
             await insertPost(form, config);

@@ -64,7 +64,14 @@ export default function Post({
                         <Message>{messageToolTip}</Message>
                     </ReactTooltip>
             </UserAndLikes>
-            <PostContents username = {username} body = {body} post_url = {post_url} metadata = {metadata}/>
+            <PostContents 
+                username = {username} 
+                body = {body} 
+                post_url = {post_url} 
+                metadata = {metadata}
+                post_id = {postId}
+                post_userId = {userId}
+            />
         </PostBox>
     )
 }
