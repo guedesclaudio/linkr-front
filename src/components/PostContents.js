@@ -1,10 +1,5 @@
 import styled from "styled-components";
-import { IconContext } from "react-icons";
-import { FaTrashAlt } from "react-icons/fa";
-import { BsFillPencilFill } from "react-icons/bs";
-import { useRef, useContext, useState } from "react";
-import { UserContext } from "../contexts/UserContext";
-import { postNewBody } from "../services/services";
+import Comment from "./Comment";
 
 export default function PostContents({
     username,
@@ -14,97 +9,12 @@ export default function PostContents({
     post_id,
     post_userId
 }) {
-    const { userId, userData } = useContext(UserContext);
-    const [isEditable, setIsEditable] = useState(false);
-    const [isDisabled, setIsDisabled] = useState(false);
-    const [isPublish, setIsPublish] = useState(false);
-
-    const [send, setSend] = useState({
-        body
-    });
-    const inputRef = useRef(null);
-    console.log(inputRef);
-
-    function getFocusInput () {
-        inputRef.current.focus();
-    }
-
-    function handleForm (e) {
-        setSend({
-            ...send,
-            [e.target.name]: e.target.value
-        });
-    }
-
-    async function submitChanges (e) {
-        if (e.key === "Escape") {
-            setSend({
-                body
-            });
-            setIsEditable(false);
-
-        } else if (e.key === "Enter") {
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${userData.token}`,
-                    postId: post_id
-                }};
-            
-            setIsDisabled(true);
-            
-            try {
-                await postNewBody(config, send);
-                setIsEditable(false);
-                setIsDisabled(false);
-                setIsPublish(true);
-
-            } catch (error) {
-                alert("Unable to save changes");
-                setIsDisabled(false);
-            }
-            
-
-        }
-    }
-
-    function deletePost () {
-
-    }
 
     return (
         <Contents>
             <UserName>{username}</UserName>
 
-            {
-                userId === post_userId ? 
-                <IconContext.Provider value={{ color: "white", className: "class-modification-icons" }}>
-                    <ModificationIcons>
-                        <BsFillPencilFill
-                            onClick={() => {
-                                setIsPublish(false);
-                                setIsEditable(!isEditable);
-                                // getFocusInput()
-                            }} />
-                        <FaTrashAlt 
-                            onClick={deletePost}
-                        />
-                    </ModificationIcons>
-                </IconContext.Provider>
-                : ''
-            }
-            {
-                !isEditable
-                ? <Body>{isPublish ? send.body : body}</Body>
-                : <EditableBody 
-                    name='body'
-                    type='text'
-                    value={send.body}
-                    onChange={handleForm}
-                    disabled={isDisabled}
-                    ref={inputRef}
-                    onKeyDown={submitChanges}
-                    />
-            }
+            <Comment body={body} post_id={post_id} post_userId={post_userId} />
             
             <a href = {post_url} target = "_blank">
                 <Link>
@@ -137,33 +47,6 @@ const UserName = styled.h1`
     line-height: 23px;
     color: #FFFFFF;
     margin-bottom: 6px;
-`;
-const ModificationIcons = styled.div`
-    width: 46px;
-    display: flex;
-    justify-content: space-between;
-    position: absolute;
-    top: 0;
-    right: 0;
-`;
-const Body = styled(UserName)`
-    font-size: 17px;
-    color: #B7B7B7;
-`;
-const EditableBody = styled.input`
-    width: 503px;
-    min-height: 44px;
-    padding: 5px 20px;
-    border-radius: 7px;
-    background-color: white;
-    border: none;
-    box-shadow: none;
-
-    font-family: 'Lato', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 16.8px;
-    color: #4C4C4C;
 `;
 const Link = styled.div`
     box-sizing: border-box;
