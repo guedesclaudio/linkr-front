@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import Comment from "./Comment";
 import { useNavigate } from "react-router-dom";
-import { ReactTagify } from "react-tagify";
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 export default function PostContents({
     username,
@@ -12,6 +13,7 @@ export default function PostContents({
     post_userId
 }) {
   const navigate = useNavigate();
+  const { userId } = useContext(UserContext);
     return (
         <Contents>
             <UserName onClick={() => navigate(`/users/${userId}`)}>
@@ -33,12 +35,6 @@ export default function PostContents({
         </Contents>
     );
 }
-
-const tagStyle = {
-  color: "#FFFFFF",
-  margin: "0px 2px",
-  cursor: "pointer",
-};
 
 const Contents = styled.div`
     margin-top: 20px;

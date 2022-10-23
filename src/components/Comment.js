@@ -177,6 +177,12 @@ export default function Comment ({ body, post_id, post_userId }) {
     );
 }
 
+const tagStyle = {
+    color: "#FFFFFF",
+    margin: "0px 2px",
+    cursor: "pointer",
+  };
+
 const Body = styled.h1`
     font-family: 'Lato', sans-serif;
     font-size: 17px;
