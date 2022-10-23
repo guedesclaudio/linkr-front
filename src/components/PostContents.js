@@ -17,6 +17,8 @@ export default function PostContents({
     const { userId, userData } = useContext(UserContext);
     const [isEditable, setIsEditable] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
+    const [isPublish, setIsPublish] = useState(false);
+
     const [send, setSend] = useState({
         body
     });
@@ -54,6 +56,7 @@ export default function PostContents({
                 await postNewBody(config, send);
                 setIsEditable(false);
                 setIsDisabled(false);
+                setIsPublish(true);
 
             } catch (error) {
                 alert("Unable to save changes");
@@ -78,6 +81,7 @@ export default function PostContents({
                     <ModificationIcons>
                         <BsFillPencilFill
                             onClick={() => {
+                                setIsPublish(false);
                                 setIsEditable(!isEditable);
                                 // getFocusInput()
                             }} />
@@ -90,7 +94,7 @@ export default function PostContents({
             }
             {
                 !isEditable
-                ? <Body>{send.body}</Body>
+                ? <Body>{isPublish ? send.body : body}</Body>
                 : <EditableBody 
                     name='body'
                     type='text'
