@@ -113,3 +113,5 @@ const LoadMessage = styled.div`
   font-weight: 400;
   text-align: center;
 `;
+
+export { TimelineWrapper, Title, Container, LoadMessage };

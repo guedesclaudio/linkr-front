@@ -29,7 +29,6 @@ export default function Publish() {
         Authorization: `Bearer ${userData.token}`,
       },
     };
-    console.log(form);
 
     try {
       await insertPost(form, config);

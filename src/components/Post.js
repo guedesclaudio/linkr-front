@@ -6,6 +6,7 @@ import { IconContext } from "react-icons";
 import { useEffect, useState, useContext } from "react";
 import { sendLikeOrDeslike } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Post({
   userId,
@@ -27,6 +28,7 @@ export default function Post({
     likesCount === "1" ? "1 curtida" : ` ${likesCount} curtidas`;
   const { userData } = useContext(UserContext);
   const config = { headers: { Authorization: `Bearer ${userData.token}` } };
+  const navigate = useNavigate();
 
   useEffect(() => {
     liked ? setHeartColor("red") : setHeartColor("white");
@@ -49,7 +51,10 @@ export default function Post({
   return (
     <PostBox>
       <UserAndLikes>
-        <UserImage src={picture_url} />
+        <UserImage
+          onClick={() => navigate(`/users/${userId}`)}
+          src={picture_url}
+        />
         <IconContext.Provider
           value={{ color: `${heartColor}`, className: "class-like" }}
         >
@@ -78,6 +83,8 @@ export default function Post({
         body={body}
         post_url={post_url}
         metadata={metadata}
+        post_id={postId}
+        post_userId={userId}
       />
     </PostBox>
   );
@@ -93,7 +100,7 @@ const PostBox = styled.div`
   justify-content: space-between;
   align-items: top;
 
-  @media (max-width: 850px) {
+  @media (max-width: 650px) {
     width: 100vw;
     min-height: 232px;
     border-radius: 0;
