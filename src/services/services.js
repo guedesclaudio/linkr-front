@@ -40,6 +40,13 @@ function postLogout(token) {
   return axios.post(`${baseUrlTest}/logout`, {}, config);
 }
 
+function getHashtagList(token) {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return axios.get(`${baseUrlTest}/hashtags`, config);
+}
+
 export {
   getPostsData,
   sendLikeOrDeslike,
@@ -48,5 +55,6 @@ export {
   verifyToken,
   postLogout,
   postSearchUser,
-  insertPost
+  insertPost,
+  getHashtagList,
 };

@@ -70,7 +70,7 @@ const Link = styled.div`
   align-items: top;
   cursor: pointer;
 
-  @media (max-width: 650px) {
+  @media (max-width: 850px) {
     width: 100%;
     min-height: 115px;
   }
@@ -79,7 +79,7 @@ const LinkContents = styled.div`
   margin-left: 20px;
   margin-top: 20px;
 
-  @media (max-width: 650px) {
+  @media (max-width: 850px) {
     margin-left: 10px;
   }
 `;
@@ -92,7 +92,7 @@ const Title = styled.h1`
   color: #cecece;
   margin-bottom: 10px;
 
-  @media (max-width: 650px) {
+  @media (max-width: 850px) {
     font-size: 10px;
   }
 `;
@@ -101,7 +101,7 @@ const Description = styled(Title)`
   font-size: 11px;
   line-height: 13px;
 
-  @media (max-width: 650px) {
+  @media (max-width: 850px) {
     font-size: 8px;
     line-height: 10px;
   }
@@ -114,7 +114,7 @@ const LinkImage = styled.img`
   min-height: 153px;
   border-radius: 0px 12px 13px 0px;
 
-  @media (max-width: 650px) {
+  @media (max-width: 850px) {
     width: 30%;
     min-height: 113px;
   }
