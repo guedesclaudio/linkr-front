@@ -41,9 +41,9 @@ export default function Navbar() {
             value={{ color: `white`, className: "menu-opener" }}
           >
             {!menuOpen ? (
-              <BiChevronDown onClick={() => setMenuOpen(true)} />
+              <BiChevronUp onClick={() => setMenuOpen(true)} />
             ) : (
-              <BiChevronUp onClick={() => setMenuOpen(false)} />
+              <BiChevronDown onClick={() => setMenuOpen(false)} />
             )}
 
             <img
