@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Post from "../components/Post";
@@ -11,27 +11,46 @@ import {
   LoadMessage,
 } from "../components/Timeline";
 import { UserContext } from "../contexts/UserContext";
+import { getHashtag } from "../services/services";
 import listPosts from "../utils/listPosts";
 
-export default function UserPosts() {
-  const { user_id } = useParams();
-  let { posts, setPosts, message, setMessage } = useContext(UserContext);
+export default function HashtagPosts() {
+  const { posts, userData, setPosts, message } = useContext(UserContext);
+  const { hashtag } = useParams();
+  const [listPostsId, setListPostsId] = useState([]);
 
-  if (posts.length === 0) {
-    const res = listPosts();
-    res.then((arr) => {
-      setPosts(arr);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    try {
+      const promise = getHashtag(
+        JSON.parse(localStorage.getItem("user")).token || userData.token,
+        hashtag
+      );
+      promise.then((res) => {
+        setListPostsId(res.data);
+      });
       if (posts.length === 0) {
-        setMessage("User does not exist or does not have posts yet!");
+        const res = listPosts();
+        res.then((arr) => {
+          setPosts(arr);
+        });
       }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [hashtag]);
+
+  const hashtagPosts = [];
+
+  for (let i = 0; i < listPostsId.length; i++) {
+    const postId = listPostsId[i];
+    posts.filter((post) => {
+      if (Number(post.post_id) === Number(postId.post_id)) {
+        hashtagPosts.push(post);
+      }
+      return false;
     });
   }
-  const userPosts = posts.filter((post) => {
-    if (Number(post.user_id) === Number(user_id)) {
-      return post;
-    }
-    return false;
-  });
 
   const [callApi, setCallApi] = useState(true);
 
@@ -40,18 +59,11 @@ export default function UserPosts() {
       <Navbar></Navbar>
       <MainContainer>
         <TimelineWrapper>
-          {userPosts[0] ? (
-            <Title>
-              <img src={userPosts[0].picture_url} alt="user" />
-              {userPosts[0].owner_post} posts
-            </Title>
-          ) : (
-            ""
-          )}
+          <Title>{`# ${hashtag}`}</Title>
 
           <Container>
-            {userPosts.length > 0 ? (
-              userPosts.map((value, index) => (
+            {hashtagPosts.length > 0 ? (
+              hashtagPosts.map((value, index) => (
                 <Post
                   key={index}
                   post_userId={value.user_id}

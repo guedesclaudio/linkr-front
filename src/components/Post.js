@@ -9,7 +9,7 @@ import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Post({
-  userId,
+  post_userId,
   username,
   picture_url,
   postId,
@@ -52,7 +52,7 @@ export default function Post({
     <PostBox>
       <UserAndLikes>
         <UserImage
-          onClick={() => navigate(`/users/${userId}`)}
+          onClick={() => navigate(`/users/${post_userId}`)}
           src={picture_url}
         />
         <IconContext.Provider
@@ -84,7 +84,9 @@ export default function Post({
         post_url={post_url}
         metadata={metadata}
         post_id={postId}
-        post_userId={userId}
+        post_userId={post_userId}
+        callApi={callApi}
+        setCallApi={setCallApi}
       />
     </PostBox>
   );
@@ -100,7 +102,7 @@ const PostBox = styled.div`
   justify-content: space-between;
   align-items: top;
 
-  @media (max-width: 650px) {
+  @media (max-width: 850px) {
     width: 100vw;
     min-height: 232px;
     border-radius: 0;
@@ -111,6 +113,7 @@ const UserImage = styled.img`
   height: 50px;
   border-radius: 26.5px;
   margin: 20px 20px 0 20px;
+  cursor: pointer;
 `;
 const UserAndLikes = styled.div`
   display: flex;
@@ -138,5 +141,5 @@ const LikesCount = styled.p`
 `;
 const Message = styled(LikesCount)`
   color: #505050;
-  font-weight: 700; ;
+  font-weight: 700;
 `;
