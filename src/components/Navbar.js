@@ -28,7 +28,7 @@ export default function Navbar() {
   }
 
   return (
-    <>
+    <Container>
       <Wrapper>
         <Link to={"/timeline"}>
           <img src={logo} alt="logo" />
@@ -77,9 +77,14 @@ export default function Navbar() {
       <SearchMobileBox>
         <SearchMobile />
       </SearchMobileBox>
-    </>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const SearchDesktop = styled.div`
   display: flex;
@@ -98,8 +103,7 @@ const SearchMobileBox = styled.div`
   width: 100%;
   height: 100%;
   display: none;
-  position: fixed;
-  top: 72px;
+  margin-top: 82px;
   z-index: 1;
 
   @media (max-width: 850px) {

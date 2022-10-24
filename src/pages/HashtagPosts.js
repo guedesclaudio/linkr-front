@@ -11,27 +11,35 @@ import {
   LoadMessage,
 } from "../components/Timeline";
 import { UserContext } from "../contexts/UserContext";
-import listPosts from "../utils/listPosts";
+import { getHashtag } from "../services/services";
 
-export default function UserPosts() {
-  const { user_id } = useParams();
-  let { posts, setPosts, message, setMessage } = useContext(UserContext);
+export default function HashtagPosts() {
+  const { posts, userData } = useContext(UserContext);
+  const { hashtag } = useParams();
+  const [listPostsId, setListPostsId] = useState([]);
 
-  if (posts.length === 0) {
-    const res = listPosts();
-    res.then((arr) => {
-      setPosts(arr);
-      if (posts.length === 0) {
-        setMessage("User does not exist or does not have posts yet!");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+  try {
+    const promise = getHashtag(userData.token, hashtag);
+    promise.then((res) => {
+      setListPostsId(res.data);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+  const hashtagPosts = [];
+
+  for (let i = 0; i < listPostsId.length; i++) {
+    const postId = listPostsId[i];
+    posts.filter((post) => {
+      if (Number(post.post_id) === Number(postId.post_id)) {
+        hashtagPosts.push(post);
       }
+      return false;
     });
   }
-  const userPosts = posts.filter((post) => {
-    if (Number(post.user_id) === Number(user_id)) {
-      return post;
-    }
-    return false;
-  });
 
   const [callApi, setCallApi] = useState(true);
 
@@ -40,18 +48,11 @@ export default function UserPosts() {
       <Navbar></Navbar>
       <MainContainer>
         <TimelineWrapper>
-          {userPosts[0] ? (
-            <Title>
-              <img src={userPosts[0].picture_url} alt="user" />
-              {userPosts[0].owner_post} posts
-            </Title>
-          ) : (
-            ""
-          )}
+          <Title>{`# ${hashtag}`}</Title>
 
           <Container>
-            {userPosts.length > 0 ? (
-              userPosts.map((value, index) => (
+            {hashtagPosts.length > 0 ? (
+              hashtagPosts.map((value, index) => (
                 <Post
                   key={index}
                   post_userId={value.user_id}
@@ -69,7 +70,7 @@ export default function UserPosts() {
                 />
               ))
             ) : (
-              <LoadMessage>{message}</LoadMessage>
+              <LoadMessage>{"message"}</LoadMessage>
             )}
           </Container>
         </TimelineWrapper>

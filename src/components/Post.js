@@ -100,7 +100,7 @@ const PostBox = styled.div`
   justify-content: space-between;
   align-items: top;
 
-  @media (max-width: 650px) {
+  @media (max-width: 850px) {
     width: 100vw;
     min-height: 232px;
     border-radius: 0;
@@ -111,6 +111,7 @@ const UserImage = styled.img`
   height: 50px;
   border-radius: 26.5px;
   margin: 20px 20px 0 20px;
+  cursor: pointer;
 `;
 const UserAndLikes = styled.div`
   display: flex;
@@ -138,5 +139,5 @@ const LikesCount = styled.p`
 `;
 const Message = styled(LikesCount)`
   color: #505050;
-  font-weight: 700; ;
+  font-weight: 700;
 `;

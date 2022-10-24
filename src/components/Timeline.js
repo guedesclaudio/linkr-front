@@ -4,6 +4,7 @@ import { useEffect, useState, useContext } from "react";
 import { getPostsData } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 import Publish from "./Publish";
+import HashtagList from "./HashtagsList.js";
 
 export default function Timeline() {
   const { posts, setPosts, userData, message, setMessage } =
@@ -30,44 +31,53 @@ export default function Timeline() {
   }, [callApi]);
 
   return (
-    <TimelineWrapper>
-      <Title>timeline</Title>
-      <Publish></Publish>
-      <Container>
-        {posts.length > 0 ? (
-          posts.map((value, index) => (
-            <Post
-              key={index}
-              userId={value.user_id}
-              username={value.owner_post}
-              picture_url={value.picture_url}
-              postId={value.post_id}
-              body={value.body}
-              post_url={value.post_url}
-              metadata={value.metadata}
-              liked={value.liked}
-              likesCount={value.likesCount}
-              messageToolTip={value.messageToolTip}
-              callApi={callApi}
-              setCallApi={setCallApi}
-            />
-          ))
-        ) : (
-          <LoadMessage>{message}</LoadMessage>
-        )}
-      </Container>
-    </TimelineWrapper>
+    <MainContainer>
+      <TimelineWrapper>
+        <Title>timeline</Title>
+        <Publish></Publish>
+        <Container>
+          {posts.length > 0 ? (
+            posts.map((value, index) => (
+              <Post
+                key={index}
+                userId={value.user_id}
+                username={value.owner_post}
+                picture_url={value.picture_url}
+                postId={value.post_id}
+                body={value.body}
+                post_url={value.post_url}
+                metadata={value.metadata}
+                liked={value.liked}
+                likesCount={value.likesCount}
+                messageToolTip={value.messageToolTip}
+                callApi={callApi}
+                setCallApi={setCallApi}
+              />
+            ))
+          ) : (
+            <LoadMessage>{message}</LoadMessage>
+          )}
+        </Container>
+      </TimelineWrapper>
+      <HashtagList />
+    </MainContainer>
   );
 }
 
+const MainContainer = styled.nav`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+
 const TimelineWrapper = styled.div`
-  margin-top: 78px;
+  margin-top: 125px;
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  @media (max-width: 650px) {
-    margin-top: 146px;
+  @media (max-width: 850px) {
+    margin-top: 40px;
   }
 `;
 
@@ -81,7 +91,7 @@ const Title = styled.div`
   color: white;
   text-align: start;
 
-  @media (max-width: 650px) {
+  @media (max-width: 850px) {
     width: 100vw;
     padding-left: 17px;
   }
@@ -91,7 +101,7 @@ const Container = styled.div`
   width: 611px;
   margin: 0px auto;
 
-  @media (max-width: 650px) {
+  @media (max-width: 850px) {
     width: 100vw;
   }
 `;
@@ -106,4 +116,4 @@ const LoadMessage = styled.div`
   text-align: center;
 `;
 
-export { TimelineWrapper, Title, Container, LoadMessage };
+export { MainContainer, TimelineWrapper, Title, Container, LoadMessage };
