@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 export default function Home() {
   const { setUserData, userData } = useContext(UserContext);
   const tokenStored =
-    userData.token || JSON.parse(localStorage.getItem("token"));
+    JSON.parse(localStorage.getItem("user")).token || userData.token;
   const navigate = useNavigate();
 
   useEffect(async () => {
@@ -28,7 +28,7 @@ export default function Home() {
       navigate("/");
     }
   }, []);
-
+  console.log(tokenStored);
   return (
     <>
       <Navbar></Navbar>

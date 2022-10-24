@@ -9,7 +9,9 @@ export default function Timeline() {
   const { posts, setPosts, userData, message, setMessage } =
     useContext(UserContext);
   const [callApi, setCallApi] = useState(true);
-  const config = { headers: { Authorization: `Bearer ${userData.token}` } };
+  const userToken =
+    JSON.parse(localStorage.getItem("user")).token || userData.token;
+  const config = { headers: { Authorization: `Bearer ${userToken}` } };
 
   useEffect(async () => {
     try {

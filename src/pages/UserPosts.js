@@ -9,14 +9,31 @@ import {
   LoadMessage,
 } from "../components/Timeline";
 import { UserContext } from "../contexts/UserContext";
+import { getPostsData } from "../services/services";
 
 export default function UserPosts() {
   const { user_id } = useParams();
-  const { posts } = useContext(UserContext);
+  let { posts, setPosts, userData, message, setMessage } =
+    useContext(UserContext);
+
+  const userToken =
+    JSON.parse(localStorage.getItem("user")).token || userData.token;
+  const config = { headers: { Authorization: `Bearer ${userToken}` } };
+  async function getPosts() {
+    const response = await getPostsData(config);
+    setPosts(response.data);
+  }
+  if (posts.length === 0) {
+    getPosts();
+  }
+  console.log(posts);
   const userPosts = posts.filter((post) => {
     if (Number(post.user_id) === Number(user_id)) return post;
     return false;
   });
+  if (userPosts.length === 0) {
+    setMessage("User does not exist or does not have posts yet!");
+  }
   const [callApi, setCallApi] = useState(true);
 
   return (
@@ -52,7 +69,7 @@ export default function UserPosts() {
               />
             ))
           ) : (
-            <LoadMessage>{"message"}</LoadMessage>
+            <LoadMessage>{message}</LoadMessage>
           )}
         </Container>
       </TimelineWrapper>

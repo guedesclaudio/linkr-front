@@ -54,7 +54,10 @@ export default function Navbar() {
                   setMenuOpen(false);
                 }
               }}
-              src={userData.userImage}
+              src={
+                JSON.parse(localStorage.getItem("user")).picture_url ||
+                userData.userImage
+              }
               alt=""
             />
           </IconContext.Provider>
