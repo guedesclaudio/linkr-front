@@ -85,6 +85,8 @@ export default function Post({
         metadata={metadata}
         post_id={postId}
         post_userId={post_userId}
+        callApi={callApi}
+        setCallApi={setCallApi}
       />
     </PostBox>
   );

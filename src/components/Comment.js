@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { IconContext } from "react-icons";
 import { FaTrashAlt } from "react-icons/fa";
 import { BsFillPencilFill } from "react-icons/bs";
-import { useRef, useContext, useState } from "react";
+import { useRef, useContext, useState, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { postNewBody, deletePost, getPostsData } from "../services/services";
 import Modal from "react-modal";
@@ -34,27 +34,29 @@ const customStyles = {
   },
 };
 
-export default function Comment({ body, post_id, post_userId }) {
+export default function Comment({ body, post_id, post_userId, callApi, setCallApi }) {
   const navigate = useNavigate();
   const { userData, setMessage, setPosts } = useContext(UserContext);
   const [isEditable, setIsEditable] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
-  const [isPublish, setIsPublish] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [editIsClicked, setIsClicked] = useState(false);
+  const [isPublish, setIsPublish] = useState(false);
   const userId = JSON.parse(localStorage.getItem("user")).user_id;
   const userToken =
     JSON.parse(localStorage.getItem("user")).token || userData.token;
-  const [send, setSend] = useState({
-    body,
-  });
+  const [send, setSend] = useState({ body });
+  let newBody = body;
 
   const inputRef = useRef();
-  console.log(inputRef);
 
-  function getFocusInput() {
-    inputRef.current.focus();
-  }
+  useEffect(() => {
+    if (editIsClicked) {
+        inputRef.current.focus();
+    }
+  }, [editIsClicked]);
+
 
   function handleForm(e) {
     setSend({
@@ -65,18 +67,22 @@ export default function Comment({ body, post_id, post_userId }) {
 
   async function submitChanges(e) {
     if (e.key === "Escape") {
-      setSend({
-        body,
-      });
+      setSend({ body: newBody });
+      setIsPublish(false);
       setIsEditable(false);
+
     } else if (e.key === "Enter") {
       setIsDisabled(true);
 
       try {
-        await postNewBody(userToken, post_id, send);
+        const response = await postNewBody(userToken, post_id, send);
+        setSend(response.data);
+        newBody = response.data.body;
+        setIsPublish(true);
         setIsEditable(false);
         setIsDisabled(false);
-        setIsPublish(true);
+        setTimeout(() => setCallApi(callApi + 1), 250);
+
       } catch (error) {
         alert("Unable to save changes");
         setIsDisabled(false);
@@ -152,9 +158,10 @@ export default function Comment({ body, post_id, post_userId }) {
           <ModificationIcons>
             <BsFillPencilFill
               onClick={() => {
+                setIsClicked(!editIsClicked);
                 setIsPublish(false);
+                setSend({ body: newBody });
                 setIsEditable(!isEditable);
-                getFocusInput();
               }}
             />
             <FaTrashAlt onClick={() => setIsOpen(true)} />
@@ -170,7 +177,7 @@ export default function Comment({ body, post_id, post_userId }) {
             tagStyle={tagStyle}
             tagClicked={(tag) => navigate(`/hashtag/${tag.slice(1)}`)}
           >
-            {isPublish ? send.body : body}
+            { isPublish ? send.body : newBody }
           </ReactTagify>
         </Body>
       ) : (
@@ -258,16 +265,6 @@ const Cancel = styled.button`
   cursor: pointer;
 `;
 const Submit = styled(Cancel)`
-  background-color: #1877f2;
-  color: white;
-`;
-const LoadingWrapper = styled.div`
-  width: 597px;
-  height: 262px;
-  border-radius: 50px;
-  background: #333333;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    background-color: #1877f2;
+    color: white;
 `;

@@ -9,6 +9,8 @@ export default function PostContents({
   metadata,
   post_id,
   post_userId,
+  callApi,
+  setCallApi
 }) {
   const navigate = useNavigate();
   return (
@@ -17,7 +19,12 @@ export default function PostContents({
         {username}
       </UserName>
 
-      <Comment body={body} post_id={post_id} post_userId={post_userId} />
+      <Comment 
+        body={body} 
+        post_id={post_id} 
+        post_userId={post_userId}
+        callApi={callApi}
+        setCallApi={setCallApi} />
 
       <a href={post_url} target="_blank">
         <Link>
