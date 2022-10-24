@@ -3,7 +3,9 @@ import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Post from "../components/Post";
+import HashtagList from "../components/HashtagsList.js";
 import {
+  MainContainer,
   TimelineWrapper,
   Container,
   LoadMessage,
@@ -22,40 +24,43 @@ export default function UserPosts() {
   return (
     <>
       <Navbar></Navbar>
-      <TimelineWrapper>
-        {userPosts[0] ? (
-          <Title>
-            <img src={userPosts[0].picture_url} alt="user" />
-            {userPosts[0].owner_post} posts
-          </Title>
-        ) : (
-          ""
-        )}
-
-        <Container>
-          {userPosts.length > 0 ? (
-            userPosts.map((value, index) => (
-              <Post
-                key={index}
-                post_userId={value.user_id}
-                username={value.owner_post}
-                picture_url={value.picture_url}
-                postId={value.post_id}
-                body={value.body}
-                post_url={value.post_url}
-                metadata={value.metadata}
-                liked={value.liked}
-                likesCount={value.likesCount}
-                messageToolTip={value.messageToolTip}
-                callApi={callApi}
-                setCallApi={setCallApi}
-              />
-            ))
+      <MainContainer>
+        <TimelineWrapper>
+          {userPosts[0] ? (
+            <Title>
+              <img src={userPosts[0].picture_url} alt="user" />
+              {userPosts[0].owner_post} posts
+            </Title>
           ) : (
-            <LoadMessage>{"message"}</LoadMessage>
+            ""
           )}
-        </Container>
-      </TimelineWrapper>
+
+          <Container>
+            {userPosts.length > 0 ? (
+              userPosts.map((value, index) => (
+                <Post
+                  key={index}
+                  post_userId={value.user_id}
+                  username={value.owner_post}
+                  picture_url={value.picture_url}
+                  postId={value.post_id}
+                  body={value.body}
+                  post_url={value.post_url}
+                  metadata={value.metadata}
+                  liked={value.liked}
+                  likesCount={value.likesCount}
+                  messageToolTip={value.messageToolTip}
+                  callApi={callApi}
+                  setCallApi={setCallApi}
+                />
+              ))
+            ) : (
+              <LoadMessage>{"message"}</LoadMessage>
+            )}
+          </Container>
+        </TimelineWrapper>
+        <HashtagList />
+      </MainContainer>
     </>
   );
 }
@@ -79,7 +84,7 @@ const Title = styled.div`
     margin: 8px 12px 0 0;
   }
 
-  @media (max-width: 650px) {
+  @media (max-width: 850px) {
     width: 100vw;
     padding-left: 17px;
   }

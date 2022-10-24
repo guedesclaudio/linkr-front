@@ -75,7 +75,7 @@ const TimelineWrapper = styled.div`
   align-items: center;
 
   @media (max-width: 850px) {
-    margin-top: 146px;
+    margin-top: 40px;
   }
 `;
 
@@ -114,4 +114,4 @@ const LoadMessage = styled.div`
   text-align: center;
 `;
 
-export { TimelineWrapper, Title, Container, LoadMessage };
+export { MainContainer, TimelineWrapper, Title, Container, LoadMessage };

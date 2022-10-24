@@ -39,14 +39,16 @@ export default function Search() {
         ></DebounceInput>
       </BoxSearch>
 
-      {list.map((value, index) => (
-        <SearchUser
-          key={index}
-          userId={value.id}
-          username={value.username}
-          picture_url={value.picture_url}
-        />
-      ))}
+      <ResultList>
+        {list.map((value, index) => (
+          <SearchUser
+            key={index}
+            userId={value.id}
+            username={value.username}
+            picture_url={value.picture_url}
+          />
+        ))}
+      </ResultList>
     </Wrapper>
   );
 }
@@ -55,7 +57,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  margin-top: 22px;
 `;
 const BoxSearch = styled.form`
   input {
@@ -67,9 +68,11 @@ const BoxSearch = styled.form`
     font-size: 19px;
     align-items: center;
     padding: 0 15px;
+    margin-top: 12px;
+    z-index: 1;
 
     @media (max-width: 850px) {
-      width: 90vw;
+      width: 95vw;
     }
   }
 
@@ -80,5 +83,14 @@ const BoxSearch = styled.form`
   input:focus {
     box-shadow: 0 0 0 0;
     outline: 0;
+  }
+`;
+
+const ResultList = styled.div`
+  @media (max-width: 850px) {
+    position: absolute;
+    width: 95%;
+    height: auto;
+    margin-top: 58px;
   }
 `;
