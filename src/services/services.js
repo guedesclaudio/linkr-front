@@ -18,8 +18,11 @@ function postSignUp(body) {
 function postSignIn(body) {
   return axios.post(`${baseUrlTest}/signin`, body);
 }
-function postSearchUser(search) {
-  return axios.post(`${baseUrlTest}/search`, search);
+function postSearchUser(token, search) {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return axios.post(`${baseUrlTest}/search`, search, config);
 }
 
 function insertPost(body, token) {
@@ -67,6 +70,13 @@ function getHashtagList(token) {
   return axios.get(`${baseUrlTest}/hashtags`, config);
 }
 
+function getHashtag(token, hashtag_id) {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return axios.get(`${baseUrlTest}/hashtag/${hashtag_id}`, config);
+}
+
 export {
   getPostsData,
   sendLikeOrDeslike,
@@ -79,4 +89,5 @@ export {
   postNewBody,
   deletePost,
   getHashtagList,
+  getHashtag,
 };

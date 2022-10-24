@@ -1,15 +1,17 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { getHashtagList } from "../services/services.js";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 export default function HashtagsList() {
   const [hashtags, setHashtags] = useState([]);
+  const { userData } = useContext(UserContext);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     try {
-      const promise = getHashtagList();
+      const promise = getHashtagList(userData.token);
       promise.then((res) => {
         setHashtags(res.data);
       });

@@ -16,7 +16,8 @@ export default function UserPosts() {
   const { user_id } = useParams();
   const { posts } = useContext(UserContext);
   const userPosts = posts.filter((post) => {
-    if (Number(post.user_id) === Number(user_id)) return post;
+    if (Number(post.user_id) === Number(user_id));
+    return post;
     return false;
   });
   const [callApi, setCallApi] = useState(true);

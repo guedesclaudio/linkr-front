@@ -1,17 +1,19 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { postSearchUser } from "../services/services";
 import SearchUser from "./SearchUser";
 import { DebounceInput } from "react-debounce-input";
+import { UserContext } from "../contexts/UserContext";
 
 export default function Search() {
+  const { userData } = useContext(UserContext);
   const [search, setSearch] = useState("");
   const [list, setList] = useState([]);
 
   async function sendSearch() {
     if (search.length > 2) {
       try {
-        const promise = await postSearchUser({ search });
+        const promise = await postSearchUser(userData.token, { search });
         setList(promise.data);
       } catch (error) {
         alert(JSON.stringify(error.response.data));
