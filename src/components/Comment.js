@@ -48,11 +48,10 @@ export default function Comment ({ body, post_id, post_userId }) {
     });
 
     const inputRef = useRef();
-    console.log(inputRef);
 
-    function getFocusInput () {
-        inputRef.current.focus();
-    }
+    // function getFocusInput () {
+    //     inputRef.current.focus();
+    // }
 
     function handleForm (e) {
         setSend({
@@ -66,6 +65,7 @@ export default function Comment ({ body, post_id, post_userId }) {
             setSend({
                 body
             });
+            setIsPublish(false);
             setIsEditable(false);
 
         } else if (e.key === "Enter") {            
@@ -144,9 +144,10 @@ export default function Comment ({ body, post_id, post_userId }) {
                 <ModificationIcons>
                     <BsFillPencilFill
                         onClick={() => {
+                            console.log(body, send);
                             setIsPublish(false);
                             setIsEditable(!isEditable);
-                            getFocusInput();
+                            // getFocusInput();
                         }} />
                     <FaTrashAlt 
                         onClick={() => setIsOpen(true)}
@@ -249,14 +250,4 @@ const Cancel = styled.button`
 const Submit = styled(Cancel)`
     background-color: #1877f2;
     color: white;
-`;
-const LoadingWrapper = styled.div`
-    width: 597px;
-    height: 262px;
-    border-radius: 50px;
-    background: #333333;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
 `;
