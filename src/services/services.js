@@ -18,8 +18,11 @@ function postSignUp(body) {
 function postSignIn(body) {
   return axios.post(`${baseUrlTest}/signin`, body);
 }
-function postSearchUser(search) {
-  return axios.post(`${baseUrlTest}/search`, search);
+function postSearchUser(token, search) {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return axios.post(`${baseUrlTest}/search`, search, config);
 }
 
 function insertPost(body, token) {
@@ -40,24 +43,38 @@ function postLogout(token) {
   return axios.post(`${baseUrlTest}/logout`, {}, config);
 }
 
-function postNewBody (token, post_id, body) {
+function postNewBody(token, post_id, body) {
   const config = {
-    headers: { 
+    headers: {
       Authorization: `Bearer ${token}`,
-      PostId: post_id
+      PostId: post_id,
     },
   };
   return axios.put(`${baseUrlTest}/posts`, body, config);
 }
 
-function deletePost (token, post_id) {
+function deletePost(token, post_id) {
   const config = {
-    headers: { 
+    headers: {
       Authorization: `Bearer ${token}`,
-      PostId: post_id
+      PostId: post_id,
     },
   };
   return axios.delete(`${baseUrlTest}/posts`, config);
+}
+
+function getHashtagList(token) {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return axios.get(`${baseUrlTest}/hashtags`, config);
+}
+
+function getHashtag(token, hashtag_id) {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return axios.get(`${baseUrlTest}/hashtag/${hashtag_id}`, config);
 }
 
 export {
@@ -70,5 +87,7 @@ export {
   postSearchUser,
   insertPost,
   postNewBody,
-  deletePost
+  deletePost,
+  getHashtagList,
+  getHashtag,
 };
