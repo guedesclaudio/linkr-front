@@ -9,7 +9,7 @@ import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Post({
-  userId,
+  post_userId,
   username,
   picture_url,
   postId,
@@ -52,7 +52,7 @@ export default function Post({
     <PostBox>
       <UserAndLikes>
         <UserImage
-          onClick={() => navigate(`/users/${userId}`)}
+          onClick={() => navigate(`/users/${post_userId}`)}
           src={picture_url}
         />
         <IconContext.Provider
@@ -84,7 +84,7 @@ export default function Post({
         post_url={post_url}
         metadata={metadata}
         post_id={postId}
-        post_userId={userId}
+        post_userId={post_userId}
       />
     </PostBox>
   );

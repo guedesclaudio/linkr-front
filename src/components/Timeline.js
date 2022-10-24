@@ -40,7 +40,7 @@ export default function Timeline() {
             posts.map((value, index) => (
               <Post
                 key={index}
-                userId={value.user_id}
+                post_userId={value.user_id}
                 username={value.owner_post}
                 picture_url={value.picture_url}
                 postId={value.post_id}

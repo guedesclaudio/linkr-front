@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Post from "../components/Post";
@@ -12,22 +12,33 @@ import {
 } from "../components/Timeline";
 import { UserContext } from "../contexts/UserContext";
 import { getHashtag } from "../services/services";
+import listPosts from "../utils/listPosts";
 
 export default function HashtagPosts() {
-  const { posts, userData } = useContext(UserContext);
+  const { posts, userData, setPosts, message } = useContext(UserContext);
   const { hashtag } = useParams();
   const [listPostsId, setListPostsId] = useState([]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-
-  try {
-    const promise = getHashtag(userData.token, hashtag);
-    promise.then((res) => {
-      setListPostsId(res.data);
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  useEffect(() => {
+    try {
+      const promise = getHashtag(
+        JSON.parse(localStorage.getItem("user")).token || userData.token,
+        hashtag
+      );
+      promise.then((res) => {
+        setListPostsId(res.data);
+      });
+      if (posts.length === 0) {
+        const res = listPosts();
+        res.then((arr) => {
+          setPosts(arr);
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [hashtag]);
 
   const hashtagPosts = [];
 
@@ -70,7 +81,7 @@ export default function HashtagPosts() {
                 />
               ))
             ) : (
-              <LoadMessage>{"message"}</LoadMessage>
+              <LoadMessage>{message}</LoadMessage>
             )}
           </Container>
         </TimelineWrapper>

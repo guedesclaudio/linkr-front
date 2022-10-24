@@ -28,7 +28,7 @@ export default function Home() {
       navigate("/");
     }
   }, []);
-  console.log(tokenStored);
+
   return (
     <>
       <Navbar></Navbar>
