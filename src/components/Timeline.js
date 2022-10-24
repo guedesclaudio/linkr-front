@@ -10,7 +10,9 @@ export default function Timeline() {
   const { posts, setPosts, userData, message, setMessage } =
     useContext(UserContext);
   const [callApi, setCallApi] = useState(true);
-  const config = { headers: { Authorization: `Bearer ${userData.token}` } };
+  const userToken =
+    JSON.parse(localStorage.getItem("user")).token || userData.token;
+  const config = { headers: { Authorization: `Bearer ${userToken}` } };
 
   useEffect(async () => {
     try {
@@ -38,7 +40,7 @@ export default function Timeline() {
             posts.map((value, index) => (
               <Post
                 key={index}
-                userId={value.user_id}
+                post_userId={value.user_id}
                 username={value.owner_post}
                 picture_url={value.picture_url}
                 postId={value.post_id}

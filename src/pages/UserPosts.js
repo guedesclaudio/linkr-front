@@ -11,15 +11,28 @@ import {
   LoadMessage,
 } from "../components/Timeline";
 import { UserContext } from "../contexts/UserContext";
+import listPosts from "../utils/listPosts";
 
 export default function UserPosts() {
   const { user_id } = useParams();
-  const { posts } = useContext(UserContext);
+  let { posts, setPosts, message, setMessage } = useContext(UserContext);
+
+  if (posts.length === 0) {
+    const res = listPosts();
+    res.then((arr) => {
+      setPosts(arr);
+      if (posts.length === 0) {
+        setMessage("User does not exist or does not have posts yet!");
+      }
+    });
+  }
   const userPosts = posts.filter((post) => {
-    if (Number(post.user_id) === Number(user_id));
-    return post;
+    if (Number(post.user_id) === Number(user_id)) {
+      return post;
+    }
     return false;
   });
+
   const [callApi, setCallApi] = useState(true);
 
   return (
@@ -56,7 +69,7 @@ export default function UserPosts() {
                 />
               ))
             ) : (
-              <LoadMessage>{"message"}</LoadMessage>
+              <LoadMessage>{message}</LoadMessage>
             )}
           </Container>
         </TimelineWrapper>
