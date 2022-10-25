@@ -82,7 +82,7 @@ function postFollowOrUnfollow(token, followed_id, follow_type) {
     headers: { Authorization: `Bearer ${token}` },
   };
   const body = { followed_id, follow_type };
-  return axios.post(`${baseUrlTest}/followers`, config, body);
+  return axios.post(`${baseUrlTest}/followers`, body, config);
 }
 
 function getFollowedList(token) {
