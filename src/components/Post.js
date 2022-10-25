@@ -2,6 +2,8 @@ import styled from "styled-components";
 import PostContents from "./PostContents.js";
 import ReactTooltip from "react-tooltip";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
+import { BiRepost } from "react-icons/bi"
+import { AiOutlineComment } from "react-icons/ai"
 import { IconContext } from "react-icons";
 import { useEffect, useState, useContext } from "react";
 import { sendLikeOrDeslike } from "../services/services";
@@ -26,7 +28,7 @@ export default function Post({
   
   const [like, setLike] = useState(liked);
   const heartColor = like ? "red" : "white"
-  const likesIsOne = likesCount === "1" ? "1 curtida" : ` ${likesCount} curtidas`;
+  const likesIsOne = likesCount === "1" ? "1 like" : ` ${likesCount} likes`;
   const { userData } = useContext(UserContext);
   const config = { headers: { Authorization: `Bearer ${userData.token}` } };
   const navigate = useNavigate();
@@ -49,6 +51,10 @@ export default function Post({
     getPosts();
   }
 
+  function repost() {
+    alert("Deseja mesmo repostar?")
+  }
+
   return (
     <PostBox>
       <UserAndLikes>
@@ -66,9 +72,17 @@ export default function Post({
               <IoIosHeartEmpty onClick={() => likeOrDeslike(true)} />
             )}
             <LikesCount data-tip data-for={messageToolTip}>
-              {!likesCount ? "0 curtidas" : likesIsOne}
+              {!likesCount ? "0 likes" : likesIsOne}
             </LikesCount>
           </Likes>
+          <CommentCount>
+            <AiOutlineComment color = {"white"}/>
+            <Count>0 comments</Count>
+          </CommentCount>
+          <RepostCount>
+            <BiRepost color = {"white"} onClick = {repost}/>
+            <Count>0 re-posts</Count>
+          </RepostCount>
         </IconContext.Provider>
         <ReactTooltip
           id={messageToolTip}
@@ -76,6 +90,7 @@ export default function Post({
           effect="float"
           type="light"
         >
+          
           <Message>{messageToolTip}</Message>
         </ReactTooltip>
       </UserAndLikes>
@@ -123,14 +138,13 @@ const UserAndLikes = styled.div`
   flex-direction: column;
 
   && .class-like {
-    margin: 30px 0 15px 0;
+    margin: 18px 0 5px 0;
     color: ${(props) => props.color};
     font-size: 20px;
     cursor: pointer;
   }
 `;
 const Likes = styled(UserAndLikes)`
-  min-height: 80px;
 `;
 const LikesCount = styled.p`
   font-family: "Lato", sans-serif;
@@ -144,3 +158,15 @@ const Message = styled(LikesCount)`
   color: #505050;
   font-weight: 700;
 `;
+const CommentCount = styled.div`
+  display: flex;
+  justify-content: top;
+  align-items: center;
+  flex-direction: column;
+  
+`
+const RepostCount = styled(CommentCount)`
+  margin-bottom: 20px;
+  color:white;
+`
+const Count = styled(LikesCount)``
