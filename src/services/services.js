@@ -77,6 +77,21 @@ function getHashtag(token, hashtag_id) {
   return axios.get(`${baseUrlTest}/hashtag/${hashtag_id}`, config);
 }
 
+function postFollowOrUnfollow(token, followed_id, follow_type) {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  const body = { followed_id, follow_type };
+  return axios.post(`${baseUrlTest}/followers`, body, config);
+}
+
+function getFollowedList(token) {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return axios.get(`${baseUrlTest}/followers`, config);
+}
+
 export {
   getPostsData,
   sendLikeOrDeslike,
@@ -90,4 +105,6 @@ export {
   deletePost,
   getHashtagList,
   getHashtag,
+  postFollowOrUnfollow,
+  getFollowedList,
 };

@@ -12,7 +12,7 @@ import {
 } from "../components/Timeline";
 import { UserContext } from "../contexts/UserContext";
 import { getHashtag } from "../services/services";
-import listPosts from "../utils/listPosts";
+import listPosts from "../helpers/listPosts";
 
 export default function HashtagPosts() {
   const { posts, userData, setPosts, message } = useContext(UserContext);

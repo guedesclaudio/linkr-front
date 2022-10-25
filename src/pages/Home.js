@@ -1,7 +1,7 @@
 import TimeLine from "../components/Timeline";
 import Navbar from "../components/Navbar";
 import { useContext, useEffect } from "react";
-import verifyStoredToken from "../utils/verifyStoredToken";
+import verifyStoredToken from "../helpers/verifyStoredToken";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 
