@@ -47,7 +47,6 @@ export default function Publish() {
           setMessage("There are no posts yet");
         }
         setPosts(response.data);
-        window.location.reload(true) //tirar
       } catch (error) {
         setMessage(
           "An error occured while trying to fetch the posts, please refresh the page"

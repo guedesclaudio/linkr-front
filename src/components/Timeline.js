@@ -7,28 +7,33 @@ import Publish from "./Publish";
 import HashtagList from "./HashtagsList.js";
 
 export default function Timeline() {
-  const { posts, setPosts, userData, message, setMessage } =
-    useContext(UserContext);
+  const { posts, setPosts, userData, message, setMessage } = useContext(UserContext);
   const [callApi, setCallApi] = useState(true);
-  const userToken =
-    JSON.parse(localStorage.getItem("user")).token || userData.token;
+  const userToken = JSON.parse(localStorage.getItem("user")).token || userData.token;
   const config = { headers: { Authorization: `Bearer ${userToken}` } };
 
-  useEffect(async () => {
-    try {
-      const response = await getPostsData(config);
-
-      if (response.data.length === 0) {
-        setMessage("There are no posts yet");
-      }
-      setPosts(response.data);
-    } catch (error) {
-      setMessage(
-        "An error occured while trying to fetch the posts, please refresh the page"
+  const getPosts = () => {
+    getPostsData(config)
+      .then((res) => {
+        if (res.data.length === 0) {
+          setMessage("There are no posts yet");
+        }
+        setPosts(res.data);
+      })
+      .catch((err) =>
+        setMessage(
+          "An error occured while trying to fetch the posts, please refresh the page"
+        )
       );
-      console.log(error);
+  };
+
+  useEffect(() => {
+    if (callApi) {
+      getPosts();
+      setCallApi(false);
     }
   }, [callApi]);
+
 
   return (
     <MainContainer>
@@ -52,6 +57,7 @@ export default function Timeline() {
                 messageToolTip={value.messageToolTip}
                 callApi={callApi}
                 setCallApi={setCallApi}
+                getPosts = {getPosts}
               />
             ))
           ) : (

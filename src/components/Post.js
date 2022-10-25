@@ -21,31 +21,32 @@ export default function Post({
   callApi,
   setCallApi,
   messageToolTip,
+  getPosts
 }) {
+  
   const [like, setLike] = useState(liked);
-  const [heartColor, setHeartColor] = useState("white");
-  const likesIsOne =
-    likesCount === "1" ? "1 curtida" : ` ${likesCount} curtidas`;
+  const heartColor = like ? "red" : "white"
+  const likesIsOne = likesCount === "1" ? "1 curtida" : ` ${likesCount} curtidas`;
   const { userData } = useContext(UserContext);
   const config = { headers: { Authorization: `Bearer ${userData.token}` } };
   const navigate = useNavigate();
 
   useEffect(() => {
-    liked ? setHeartColor("red") : setHeartColor("white");
-  }, []);
+    setLike(liked);
+  }, [liked]);
 
   function likeOrDeslike(value) {
     if (value) {
       setLike(true);
-      setHeartColor("red");
-      setTimeout(() => setCallApi(callApi + 1), 250);
       sendLikeOrDeslike({ postId, likeValue: true, config });
+      getPosts();
+      setCallApi(true);
       return;
     }
     setLike(false);
-    setHeartColor("white");
-    setTimeout(() => setCallApi(callApi + 1), 250);
     sendLikeOrDeslike({ postId, likeValue: false, config });
+    setCallApi(true);
+    getPosts();
   }
 
   return (
