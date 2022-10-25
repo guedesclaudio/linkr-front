@@ -1,46 +1,46 @@
 import axios from "axios";
 
-const baseUrlTest = "http://localhost:5001"; //url de teste
+const baseUrlTest = "http://localhost:5000"; //url de teste
 const baseUrlProduction = "https://linkr-backend-api.herokuapp.com"; //url de producao
 
 function getPostsData(config) {
-  return axios.get(`${baseUrlProduction}/timeline`, config); //pegar config
+  return axios.get(`${baseUrlTest}/timeline`, config); //pegar config
 }
 
 function sendLikeOrDeslike({ postId, likeValue, config }) {
-  return axios.post(`${baseUrlProduction}/likes/${postId}`, { likeValue }, config); //pegar config
+  return axios.post(`${baseUrlTest}/likes/${postId}`, { likeValue }, config); //pegar config
 }
 
 function postSignUp(body) {
-  return axios.post(`${baseUrlProduction}/signup`, body);
+  return axios.post(`${baseUrlTest}/signup`, body);
 }
 
 function postSignIn(body) {
-  return axios.post(`${baseUrlProduction}/signin`, body);
+  return axios.post(`${baseUrlTest}/signin`, body);
 }
 function postSearchUser(token, search) {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
-  return axios.post(`${baseUrlProduction}/search`, search, config);
+  return axios.post(`${baseUrlTest}/search`, search, config);
 }
 
 function insertPost(body, token) {
-  return axios.post(`${baseUrlProduction}/posts`, body, token);
+  return axios.post(`${baseUrlTest}/posts`, body, token);
 }
 
 function verifyToken(token) {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
-  return axios.get(`${baseUrlProduction}/sessions`, config);
+  return axios.get(`${baseUrlTest}/sessions`, config);
 }
 
 function postLogout(token) {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
-  return axios.post(`${baseUrlProduction}/logout`, {}, config);
+  return axios.post(`${baseUrlTest}/logout`, {}, config);
 }
 
 function postNewBody(token, post_id, body) {
@@ -50,7 +50,7 @@ function postNewBody(token, post_id, body) {
       PostId: post_id,
     },
   };
-  return axios.put(`${baseUrlProduction}/posts`, body, config);
+  return axios.put(`${baseUrlTest}/posts`, body, config);
 }
 
 function deletePost(token, post_id) {
@@ -60,21 +60,21 @@ function deletePost(token, post_id) {
       PostId: post_id,
     },
   };
-  return axios.delete(`${baseUrlProduction}/posts`, config);
+  return axios.delete(`${baseUrlTest}/posts`, config);
 }
 
 function getHashtagList(token) {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
-  return axios.get(`${baseUrlProduction}/hashtags`, config);
+  return axios.get(`${baseUrlTest}/hashtags`, config);
 }
 
 function getHashtag(token, hashtag_id) {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
-  return axios.get(`${baseUrlProduction}/hashtag/${hashtag_id}`, config);
+  return axios.get(`${baseUrlTest}/hashtag/${hashtag_id}`, config);
 }
 
 export {
