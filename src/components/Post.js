@@ -6,7 +6,7 @@ import { BiRepost } from "react-icons/bi"
 import { AiOutlineComment } from "react-icons/ai"
 import { IconContext } from "react-icons";
 import { useEffect, useState, useContext } from "react";
-import { sendLikeOrDeslike } from "../services/services";
+import { sendLikeOrDeslike, postRepost } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 
@@ -37,22 +37,36 @@ export default function Post({
     setLike(liked);
   }, [liked]);
 
-  function likeOrDeslike(value) {
+  async function likeOrDeslike(value) {
     if (value) {
       setLike(true);
-      sendLikeOrDeslike({ postId, likeValue: true, config });
+      try {
+        await sendLikeOrDeslike({ postId, likeValue: true, config });
+      } catch (error) {
+        console.error(error, "Unable to communicate")
+      }
+      
       getPosts();
       setCallApi(true);
       return;
     }
     setLike(false);
-    sendLikeOrDeslike({ postId, likeValue: false, config });
+    try {
+      sendLikeOrDeslike({ postId, likeValue: false, config });
+    } catch (error) {
+      console.error(error, "Unable to communicate")
+    }
     setCallApi(true);
     getPosts();
   }
 
   function repost() {
     alert("Deseja mesmo repostar?")
+    try {
+      postRepost({config, postId})
+    } catch (error) {
+      console.error(error, "Unable to communicate")
+    }
   }
 
   return (
