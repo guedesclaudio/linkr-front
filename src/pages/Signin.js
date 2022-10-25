@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { postSignIn } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
-import verifyStoredToken from "../utils/verifyStoredToken";
+import verifyStoredToken from "../helpers/verifyStoredToken";
 
 export default function Signin() {
   const { setUserData, setUserId } = useContext(UserContext);
