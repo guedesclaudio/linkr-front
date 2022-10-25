@@ -96,6 +96,10 @@ function getUserById(userId) {
   return axios.get(`${baseUrlTest}/users/${userId}`);
 }
 
+function postRepost({ config, postId }) {
+  return axios.post(`${baseUrlTest}/reposts`, postId, config);
+}
+
 export {
   getPostsData,
   sendLikeOrDeslike,
@@ -112,4 +116,5 @@ export {
   postFollowOrUnfollow,
   getFollowedList,
   getUserById,
+  postRepost,
 };
