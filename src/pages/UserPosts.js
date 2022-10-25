@@ -11,7 +11,7 @@ import {
   LoadMessage,
 } from "../components/Timeline";
 import { UserContext } from "../contexts/UserContext";
-import listPosts from "../utils/listPosts";
+import listPosts from "../helpers/listPosts";
 
 export default function UserPosts() {
   const { user_id } = useParams();
