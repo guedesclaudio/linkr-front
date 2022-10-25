@@ -21,27 +21,44 @@ export default function Timeline() {
     JSON.parse(localStorage.getItem("user")).token || userData.token;
   const config = { headers: { Authorization: `Bearer ${userToken}` } };
   const userId = JSON.parse(localStorage.getItem("user")).user_id;
+  let followed_list;
 
+  const getUsersFollowed = () => {
+    getFollowedList(userToken).then((res) => {
+      followed_list = res.data;
+    });
+  };
   const getPosts = () => {
     getPostsData(config)
       .then((res) => {
-        const followed_list = getFollowedList(userToken);
-        let a = response.data.filter((post) => post.user_id === userId);
-        console.log(a);
+        const filteredPosts = res.data.filter(
+          (post) =>
+            post.user_id === userId ||
+            followed_list.find(
+              (item) => Number(item.followed_id) === Number(post.user_id)
+            )
+        );
+        setFollowedPosts(filteredPosts);
         if (res.data.length === 0) {
           setMessage("There are no posts yet");
+        } else if (filteredPosts.length === 0 && followed_list.length === 0) {
+          setMessage("You don't follow anyone yet. Search for new friends!");
+        } else if (filteredPosts.length === 0 && followed_list.length !== 0) {
+          setMessage("No posts found from your friends");
         }
         setPosts(res.data);
       })
-      .catch((err) =>
+      .catch((err) => {
+        console.log(err);
         setMessage(
           "An error occured while trying to fetch the posts, please refresh the page"
-        )
-      );
+        );
+      });
   };
 
   useEffect(() => {
     if (callApi) {
+      getUsersFollowed();
       getPosts();
       setCallApi(false);
     }
@@ -53,8 +70,8 @@ export default function Timeline() {
         <Title>timeline</Title>
         <Publish></Publish>
         <Container>
-          {posts.length > 0 ? (
-            posts.map((value, index) => (
+          {followedPosts.length > 0 ? (
+            followedPosts.map((value, index) => (
               <Post
                 key={index}
                 post_userId={value.user_id}

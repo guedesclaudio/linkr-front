@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Post from "../components/Post";
 import HashtagList from "../components/HashtagsList.js";
+import FollowButton from "../components/FollowButton";
 import {
   MainContainer,
   TimelineWrapper,
@@ -11,55 +12,42 @@ import {
   LoadMessage,
 } from "../components/Timeline";
 import { UserContext } from "../contexts/UserContext";
-import listPosts from "../helpers/listPosts";
 import checkFollow from "../helpers/checkFollow";
-import { postFollowOrUnfollow } from "../services/services";
+import { getUserById } from "../services/services";
 
 export default function UserPosts() {
   const { user_id } = useParams();
-  let { posts, setPosts, message, setMessage, userData } =
-    useContext(UserContext);
+  const { posts, message, setMessage } = useContext(UserContext);
   const [isFollowed, setIsFollowed] = useState(null);
-  const [buttonDisabled, setButtonDisabled] = useState(false);
   const [callApi, setCallApi] = useState(0);
+  const [userPosts, setUserPosts] = useState([]);
+  const [existingUsername, setExistingUsername] = useState("");
 
   useEffect(() => {
     const response = checkFollow(user_id);
     response.then((res) => {
       setIsFollowed(res);
     });
-  }, [callApi]);
-
-  if (posts.length === 0) {
-    const res = listPosts();
-    res.then((arr) => {
-      setPosts(arr);
-      if (posts.length === 0) {
-        setMessage("User does not exist or does not have posts yet!");
+    const request = getUserById(user_id);
+    request.then((res) => {
+      if (res.data.length !== 0) {
+        setExistingUsername(res.data[0].username);
       }
     });
-  }
-  const userPosts = posts.filter((post) => {
-    if (Number(post.user_id) === Number(user_id)) {
-      return post;
+    setUserPosts(
+      posts.filter((post) => {
+        if (Number(post.user_id) === Number(user_id)) {
+          return post;
+        }
+        return false;
+      })
+    );
+    if (!existingUsername) {
+      setMessage("User does not exist!");
+    } else if (userPosts.length === 0) {
+      setMessage("User does not have posts yet!");
     }
-    return false;
-  });
-
-  function followOrUnfollow() {
-    setButtonDisabled(true);
-    const token =
-      JSON.parse(localStorage.getItem("user")).token || userData.token;
-    const followed_id = user_id;
-    const follow_type = isFollowed ? "unfollow" : "follow";
-    try {
-      postFollowOrUnfollow(token, followed_id, follow_type);
-    } catch (error) {
-      alert(error.message);
-    }
-    setCallApi(callApi + 1);
-    setButtonDisabled(false);
-  }
+  }, [callApi, existingUsername]);
 
   return (
     <>
@@ -74,16 +62,23 @@ export default function UserPosts() {
                 ""
               ) : (
                 <FollowButton
-                  disabled={buttonDisabled}
                   isFollowed={isFollowed}
-                  onClick={followOrUnfollow}
-                >
-                  {isFollowed ? "Unfollow" : "Follow"}
-                </FollowButton>
+                  user_id={user_id}
+                  callApi={callApi}
+                  setCallApi={setCallApi}
+                ></FollowButton>
               )}
             </Title>
           ) : (
-            ""
+            <Title>
+              {existingUsername} posts
+              <FollowButton
+                isFollowed={isFollowed}
+                user_id={user_id}
+                callApi={callApi}
+                setCallApi={setCallApi}
+              ></FollowButton>
+            </Title>
           )}
 
           <Container>
@@ -140,31 +135,5 @@ const Title = styled.div`
     width: 100vw;
     padding-left: 17px;
     margin-bottom: 50px;
-  }
-`;
-
-const FollowButton = styled.div`
-  background-color: ${(props) => (props.isFollowed ? "#FFFFFF" : "#1877f2")};
-  color: ${(props) => (!props.isFollowed ? "#FFFFFF" : "#1877f2")};
-  pointer-events: ${(props) => (props.disabled ? "none" : "inherit")};
-  opacity: ${(props) => (props.disabled ? "0.5" : "1")};
-  border-radius: 5px;
-  width: 112px;
-  height: 31px;
-  font-family: "Lato";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  right: 0;
-  top: 2vh;
-  cursor: pointer;
-
-  @media (max-width: 450px) {
-    left: calc((100vw - 112px) / 2);
-    top: 7vh;
   }
 `;

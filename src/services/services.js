@@ -92,6 +92,10 @@ function getFollowedList(token) {
   return axios.get(`${baseUrlTest}/followers`, config);
 }
 
+function getUserById(userId) {
+  return axios.get(`${baseUrlTest}/users/${userId}`);
+}
+
 export {
   getPostsData,
   sendLikeOrDeslike,
@@ -107,4 +111,5 @@ export {
   getHashtag,
   postFollowOrUnfollow,
   getFollowedList,
+  getUserById,
 };
