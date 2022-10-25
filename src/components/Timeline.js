@@ -1,26 +1,36 @@
 import styled from "styled-components";
 import Post from "./Post";
 import { useEffect, useState, useContext } from "react";
-import { getPostsData } from "../services/services";
+import { getFollowedList, getPostsData } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 import Publish from "./Publish";
 import HashtagList from "./HashtagsList.js";
 
 export default function Timeline() {
-  const { posts, setPosts, userData, message, setMessage } =
-    useContext(UserContext);
+  const {
+    posts,
+    setPosts,
+    userData,
+    message,
+    setMessage,
+    followedPosts,
+    setFollowedPosts,
+  } = useContext(UserContext);
   const [callApi, setCallApi] = useState(true);
   const userToken =
     JSON.parse(localStorage.getItem("user")).token || userData.token;
   const config = { headers: { Authorization: `Bearer ${userToken}` } };
+  const userId = JSON.parse(localStorage.getItem("user")).user_id;
 
   useEffect(async () => {
     try {
       const response = await getPostsData(config);
-
+      const followed_list = await getFollowedList(userToken);
       if (response.data.length === 0) {
         setMessage("There are no posts yet");
       }
+      let a = response.data.filter((post) => post.user_id === userId);
+      console.log(a);
       setPosts(response.data);
     } catch (error) {
       setMessage(
