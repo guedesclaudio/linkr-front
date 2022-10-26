@@ -34,7 +34,7 @@ const customStyles = {
   },
 };
 
-export default function Comment({ body, post_id, post_userId, setCallApi }) {
+export default function Body({ body, post_id, post_userId, setCallApi }) {
   const navigate = useNavigate();
   const { userData } = useContext(UserContext);
   const [isEditable, setIsEditable] = useState(false);
@@ -149,16 +149,16 @@ export default function Comment({ body, post_id, post_userId, setCallApi }) {
       )}
 
       {!isEditable ? (
-        <Body>
+        <Text>
           <ReactTagify
             tagStyle={tagStyle}
             tagClicked={(tag) => navigate(`/hashtag/${tag.slice(1)}`)}
           >
-            { newBody }
+            { newText }
           </ReactTagify>
-        </Body>
+        </Text>
       ) : (
-        <EditableBody
+        <EditableText
           name="body"
           type="text"
           value={send.body}
@@ -178,7 +178,7 @@ const tagStyle = {
   cursor: "pointer",
 };
 
-const Body = styled.h1`
+const Text = styled.h1`
   font-family: "Lato", sans-serif;
   font-size: 17px;
   font-weight: 400;
@@ -186,7 +186,7 @@ const Body = styled.h1`
   color: #b7b7b7;
   margin-bottom: 6px;
 `;
-const EditableBody = styled.input`
+const EditableText = styled.input`
   width: 503px;
   min-height: 44px;
   padding: 5px 20px;
