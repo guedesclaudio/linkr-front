@@ -10,7 +10,7 @@ export default function PostContents({
   post_id,
   post_userId,
   callApi,
-  setCallApi
+  setCallApi,
 }) {
   const navigate = useNavigate();
   return (
@@ -24,7 +24,8 @@ export default function PostContents({
         post_id={post_id} 
         post_userId={post_userId}
         callApi={callApi}
-        setCallApi={setCallApi} />
+        setCallApi={setCallApi}
+      />
 
       <a href={post_url} target="_blank">
         <Link>
@@ -47,7 +48,7 @@ const Contents = styled.div`
   width: 82%;
   min-height: 180px;
   box-sizing: border-box;
-
+  word-break: break-word;
   position: relative;
 `;
 const UserName = styled.h1`

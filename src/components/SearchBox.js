@@ -42,6 +42,7 @@ export default function Search() {
     <Wrapper>
       <BoxSearch>
         <DebounceInput
+          autocomplete="off"
           placeholder="Search for people"
           type="text"
           name="search"

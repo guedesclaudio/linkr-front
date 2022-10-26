@@ -104,14 +104,15 @@ const Question = styled.div`
   }
 `;
 
-const InputPost = styled.input`
+const InputPost = styled.textarea`
+  font-family: "Lato", sans-serif;
   margin-bottom: ${(props) => (props.content === "url" ? "5px" : "36px")};
-  padding: 5px 13px;
+  padding: 13px 13px 0 13px;
   min-height: ${(props) => (props.content === "url" ? "30px" : "66px")};
   border: none;
   border-radius: 5px;
   background-color: #efefef;
-
+  justify-content: center;
   position: relative;
 
   &::placeholder {
