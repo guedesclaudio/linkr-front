@@ -7,7 +7,7 @@ async function checkFollow(post_userId) {
     const followed_list = await getFollowedList(userToken);
 
     if (Number(userId) === Number(post_userId)) {
-      return "owner";
+      return "author";
     } else if (
       followed_list.data.find(
         (item) => Number(item.followed_id) === Number(post_userId)
@@ -19,7 +19,7 @@ async function checkFollow(post_userId) {
     return false;
   } catch (error) {
     console.log(error);
-    return error.message;
+    return;
   }
 }
 
