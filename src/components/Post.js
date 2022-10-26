@@ -2,14 +2,16 @@ import styled from "styled-components";
 import PostContents from "./PostContents.js";
 import ReactTooltip from "react-tooltip";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
+import { BiRepost } from "react-icons/bi"
+import { AiOutlineComment } from "react-icons/ai"
 import { IconContext } from "react-icons";
 import { useEffect, useState, useContext } from "react";
-import { sendLikeOrDeslike } from "../services/services";
+import { sendLikeOrDeslike, postRepost } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Post({
-  userId,
+  post_userId,
   username,
   picture_url,
   postId,
@@ -21,38 +23,57 @@ export default function Post({
   callApi,
   setCallApi,
   messageToolTip,
+  getPosts
 }) {
+  
   const [like, setLike] = useState(liked);
-  const [heartColor, setHeartColor] = useState("white");
-  const likesIsOne =
-    likesCount === "1" ? "1 curtida" : ` ${likesCount} curtidas`;
+  const heartColor = like ? "red" : "white"
+  const likesIsOne = likesCount === "1" ? "1 like" : ` ${likesCount} likes`;
   const { userData } = useContext(UserContext);
   const config = { headers: { Authorization: `Bearer ${userData.token}` } };
   const navigate = useNavigate();
 
   useEffect(() => {
-    liked ? setHeartColor("red") : setHeartColor("white");
-  }, []);
+    setLike(liked);
+  }, [liked]);
 
-  function likeOrDeslike(value) {
+  async function likeOrDeslike(value) {
     if (value) {
       setLike(true);
-      setHeartColor("red");
-      setTimeout(() => setCallApi(callApi + 1), 250);
-      sendLikeOrDeslike({ postId, likeValue: true, config });
+      try {
+        await sendLikeOrDeslike({ postId, likeValue: true, config });
+      } catch (error) {
+        console.error(error, "Unable to communicate")
+      }
+      
+      getPosts();
+      setCallApi(true);
       return;
     }
     setLike(false);
-    setHeartColor("white");
-    setTimeout(() => setCallApi(callApi + 1), 250);
-    sendLikeOrDeslike({ postId, likeValue: false, config });
+    try {
+      sendLikeOrDeslike({ postId, likeValue: false, config });
+    } catch (error) {
+      console.error(error, "Unable to communicate")
+    }
+    setCallApi(true);
+    getPosts();
+  }
+
+  function repost() {
+    alert("Deseja mesmo repostar?")
+    try {
+      postRepost({config, postId})
+    } catch (error) {
+      console.error(error, "Unable to communicate")
+    }
   }
 
   return (
     <PostBox>
       <UserAndLikes>
         <UserImage
-          onClick={() => navigate(`/users/${userId}`)}
+          onClick={() => navigate(`/users/${post_userId}`)}
           src={picture_url}
         />
         <IconContext.Provider
@@ -65,9 +86,17 @@ export default function Post({
               <IoIosHeartEmpty onClick={() => likeOrDeslike(true)} />
             )}
             <LikesCount data-tip data-for={messageToolTip}>
-              {!likesCount ? "0 curtidas" : likesIsOne}
+              {!likesCount ? "0 likes" : likesIsOne}
             </LikesCount>
           </Likes>
+          <CommentCount>
+            <AiOutlineComment color = {"white"}/>
+            <Count>0 comments</Count>
+          </CommentCount>
+          <RepostCount>
+            <BiRepost color = {"white"} onClick = {repost}/>
+            <Count>0 re-posts</Count>
+          </RepostCount>
         </IconContext.Provider>
         <ReactTooltip
           id={messageToolTip}
@@ -75,6 +104,7 @@ export default function Post({
           effect="float"
           type="light"
         >
+          
           <Message>{messageToolTip}</Message>
         </ReactTooltip>
       </UserAndLikes>
@@ -84,7 +114,9 @@ export default function Post({
         post_url={post_url}
         metadata={metadata}
         post_id={postId}
-        post_userId={userId}
+        post_userId={post_userId}
+        callApi={callApi}
+        setCallApi={setCallApi}
       />
     </PostBox>
   );
@@ -120,14 +152,13 @@ const UserAndLikes = styled.div`
   flex-direction: column;
 
   && .class-like {
-    margin: 30px 0 15px 0;
+    margin: 18px 0 5px 0;
     color: ${(props) => props.color};
     font-size: 20px;
     cursor: pointer;
   }
 `;
 const Likes = styled(UserAndLikes)`
-  min-height: 80px;
 `;
 const LikesCount = styled.p`
   font-family: "Lato", sans-serif;
@@ -141,3 +172,15 @@ const Message = styled(LikesCount)`
   color: #505050;
   font-weight: 700;
 `;
+const CommentCount = styled.div`
+  display: flex;
+  justify-content: top;
+  align-items: center;
+  flex-direction: column;
+  
+`
+const RepostCount = styled(CommentCount)`
+  margin-bottom: 20px;
+  color:white;
+`
+const Count = styled(LikesCount)``

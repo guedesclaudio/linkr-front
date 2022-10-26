@@ -1,30 +1,66 @@
 import styled from "styled-components";
 import Post from "./Post";
 import { useEffect, useState, useContext } from "react";
-import { getPostsData } from "../services/services";
+import { getFollowedList, getPostsData } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 import Publish from "./Publish";
 import HashtagList from "./HashtagsList.js";
 
 export default function Timeline() {
-  const { posts, setPosts, userData, message, setMessage } =
-    useContext(UserContext);
+  const {
+    posts,
+    setPosts,
+    userData,
+    message,
+    setMessage,
+    followedPosts,
+    setFollowedPosts,
+  } = useContext(UserContext);
   const [callApi, setCallApi] = useState(true);
-  const config = { headers: { Authorization: `Bearer ${userData.token}` } };
+  const userToken =
+    JSON.parse(localStorage.getItem("user")).token || userData.token;
+  const config = { headers: { Authorization: `Bearer ${userToken}` } };
+  const userId = JSON.parse(localStorage.getItem("user")).user_id;
+  let followed_list;
 
-  useEffect(async () => {
-    try {
-      const response = await getPostsData(config);
+  const getUsersFollowed = () => {
+    getFollowedList(userToken).then((res) => {
+      followed_list = res.data;
+    });
+  };
+  const getPosts = () => {
+    getPostsData(config)
+      .then((res) => {
+        const filteredPosts = res.data.filter(
+          (post) =>
+            post.user_id === userId ||
+            followed_list.find(
+              (item) => Number(item.followed_id) === Number(post.user_id)
+            )
+        );
+        setFollowedPosts(filteredPosts);
+        if (res.data.length === 0) {
+          setMessage("There are no posts yet");
+        } else if (filteredPosts.length === 0 && followed_list.length === 0) {
+          setMessage("You don't follow anyone yet. Search for new friends!");
+        } else if (filteredPosts.length === 0 && followed_list.length !== 0) {
+          setMessage("No posts found from your friends");
+        }
+        setPosts(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        setMessage(
+          "An error occured while trying to fetch the posts, please refresh the page"
+        );
+      });
+  };
 
-      if (response.data.length === 0) {
-        setMessage("There are no posts yet");
-      }
-      setPosts(response.data);
-    } catch (error) {
-      setMessage(
-        "An error occured while trying to fetch the posts, please refresh the page"
-      );
-      console.log(error);
+  useEffect(() => {
+    if (callApi) {
+      getUsersFollowed();
+      getPosts();
+      setCallApi(false);
     }
   }, [callApi]);
 
@@ -34,11 +70,11 @@ export default function Timeline() {
         <Title>timeline</Title>
         <Publish></Publish>
         <Container>
-          {posts.length > 0 ? (
-            posts.map((value, index) => (
+          {followedPosts.length > 0 ? (
+            followedPosts.map((value, index) => (
               <Post
                 key={index}
-                userId={value.user_id}
+                post_userId={value.user_id}
                 username={value.owner_post}
                 picture_url={value.picture_url}
                 postId={value.post_id}
@@ -50,6 +86,7 @@ export default function Timeline() {
                 messageToolTip={value.messageToolTip}
                 callApi={callApi}
                 setCallApi={setCallApi}
+                getPosts={getPosts}
               />
             ))
           ) : (

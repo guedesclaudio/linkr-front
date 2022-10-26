@@ -1,10 +1,16 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 export default function SearchUser({ userId, username, picture_url }) {
+  const navigate = useNavigate();
   return (
     <Wrapper>
-      <img src={picture_url} alt="" />
-      <h1> {username} </h1>
+      <img
+        onClick={() => navigate(`/users/${userId}`)}
+        src={picture_url}
+        alt=""
+      />
+      <h1 onClick={() => navigate(`/users/${userId}`)}> {username} </h1>
     </Wrapper>
   );
 }

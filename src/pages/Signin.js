@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { postSignIn } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
-import verifyStoredToken from "../utils/verifyStoredToken";
+import verifyStoredToken from "../helpers/verifyStoredToken";
 
 export default function Signin() {
   const { setUserData, setUserId } = useContext(UserContext);
@@ -20,7 +20,7 @@ export default function Signin() {
       const userStored = JSON.parse(localStorage.getItem("user"));
       setUserData({
         token: userStored.token,
-        userImage: userStored.picture_url
+        userImage: userStored.picture_url,
       });
       navigate("/timeline");
     } else localStorage.setItem("user", JSON.stringify(""));
@@ -34,11 +34,9 @@ export default function Signin() {
   }
   async function sendForm() {
     const body = { ...form };
-    //console.log(body);
     setButtonDisabled(true);
     try {
       const response = await postSignIn(body);
-      //console.log(response.data);
       localStorage.setItem("user", JSON.stringify(response.data));
       setUserData({
         token: response.data.token,

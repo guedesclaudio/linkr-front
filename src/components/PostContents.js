@@ -9,6 +9,8 @@ export default function PostContents({
   metadata,
   post_id,
   post_userId,
+  callApi,
+  setCallApi
 }) {
   const navigate = useNavigate();
   return (
@@ -17,7 +19,12 @@ export default function PostContents({
         {username}
       </UserName>
 
-      <Comment body={body} post_id={post_id} post_userId={post_userId} />
+      <Comment 
+        body={body} 
+        post_id={post_id} 
+        post_userId={post_userId}
+        callApi={callApi}
+        setCallApi={setCallApi} />
 
       <a href={post_url} target="_blank">
         <Link>
@@ -72,6 +79,8 @@ const Link = styled.div`
 const LinkContents = styled.div`
   margin-left: 20px;
   margin-top: 20px;
+  width: 60%;
+  min-height: 115px;
 
   @media (max-width: 850px) {
     margin-left: 10px;
@@ -102,6 +111,7 @@ const Description = styled(Title)`
 `;
 const Url = styled(Description)`
   color: #cecece;
+  word-break: break-all;
 `;
 const LinkImage = styled.img`
   width: 153.44px;

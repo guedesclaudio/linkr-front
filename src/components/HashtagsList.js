@@ -11,7 +11,9 @@ export default function HashtagsList() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     try {
-      const promise = getHashtagList(userData.token);
+      const promise = getHashtagList(
+        JSON.parse(localStorage.getItem("user")).token || userData.token
+      );
       promise.then((res) => {
         setHashtags(res.data);
       });

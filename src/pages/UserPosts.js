@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Post from "../components/Post";
 import HashtagList from "../components/HashtagsList.js";
+import FollowButton from "../components/FollowButton";
 import {
   MainContainer,
   TimelineWrapper,
@@ -11,15 +12,42 @@ import {
   LoadMessage,
 } from "../components/Timeline";
 import { UserContext } from "../contexts/UserContext";
+import checkFollow from "../helpers/checkFollow";
+import { getUserById } from "../services/services";
 
 export default function UserPosts() {
   const { user_id } = useParams();
-  const { posts } = useContext(UserContext);
-  const userPosts = posts.filter((post) => {
-    if (Number(post.user_id) === Number(user_id)) return post;
-    return false;
-  });
-  const [callApi, setCallApi] = useState(true);
+  const { posts, message, setMessage } = useContext(UserContext);
+  const [isFollowed, setIsFollowed] = useState(null);
+  const [callApi, setCallApi] = useState(0);
+  const [userPosts, setUserPosts] = useState([]);
+  const [existingUsername, setExistingUsername] = useState("");
+
+  useEffect(() => {
+    const response = checkFollow(user_id);
+    response.then((res) => {
+      setIsFollowed(res);
+    });
+    const request = getUserById(user_id);
+    request.then((res) => {
+      if (res.data.length !== 0) {
+        setExistingUsername(res.data[0].username);
+      }
+    });
+    setUserPosts(
+      posts.filter((post) => {
+        if (Number(post.user_id) === Number(user_id)) {
+          return post;
+        }
+        return false;
+      })
+    );
+    if (!existingUsername) {
+      setMessage("User does not exist!");
+    } else if (userPosts.length === 0) {
+      setMessage("User does not have posts yet!");
+    }
+  }, [callApi, existingUsername]);
 
   return (
     <>
@@ -30,9 +58,27 @@ export default function UserPosts() {
             <Title>
               <img src={userPosts[0].picture_url} alt="user" />
               {userPosts[0].owner_post} posts
+              {isFollowed === "owner" ? (
+                ""
+              ) : (
+                <FollowButton
+                  isFollowed={isFollowed}
+                  user_id={user_id}
+                  callApi={callApi}
+                  setCallApi={setCallApi}
+                ></FollowButton>
+              )}
             </Title>
           ) : (
-            ""
+            <Title>
+              {existingUsername} posts
+              <FollowButton
+                isFollowed={isFollowed}
+                user_id={user_id}
+                callApi={callApi}
+                setCallApi={setCallApi}
+              ></FollowButton>
+            </Title>
           )}
 
           <Container>
@@ -55,7 +101,7 @@ export default function UserPosts() {
                 />
               ))
             ) : (
-              <LoadMessage>{"message"}</LoadMessage>
+              <LoadMessage>{message}</LoadMessage>
             )}
           </Container>
         </TimelineWrapper>
@@ -76,16 +122,16 @@ const Title = styled.div`
   text-align: start;
   display: flex;
   align-items: center;
-
+  position: relative;
   img {
     border-radius: 50%;
     width: 50px;
     height: 50px;
     margin: 8px 12px 0 0;
   }
-
   @media (max-width: 850px) {
     width: 100vw;
     padding-left: 17px;
+    margin-bottom: 50px;
   }
 `;

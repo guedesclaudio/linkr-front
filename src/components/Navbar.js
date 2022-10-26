@@ -41,9 +41,9 @@ export default function Navbar() {
             value={{ color: `white`, className: "menu-opener" }}
           >
             {!menuOpen ? (
-              <BiChevronDown onClick={() => setMenuOpen(true)} />
+              <BiChevronUp onClick={() => setMenuOpen(true)} />
             ) : (
-              <BiChevronUp onClick={() => setMenuOpen(false)} />
+              <BiChevronDown onClick={() => setMenuOpen(false)} />
             )}
 
             <img
@@ -54,7 +54,10 @@ export default function Navbar() {
                   setMenuOpen(false);
                 }
               }}
-              src={userData.userImage}
+              src={
+                JSON.parse(localStorage.getItem("user")).picture_url ||
+                userData.userImage
+              }
               alt=""
             />
           </IconContext.Provider>
