@@ -9,6 +9,9 @@ import { useEffect, useState, useContext } from "react";
 import { sendLikeOrDeslike, postRepost } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
+import { customStyles } from "../styles/customStyles.js";
+
 
 export default function Post({
   post_userId,
@@ -21,6 +24,8 @@ export default function Post({
   liked,
   likesCount,
   repostsCount,
+  repost_user_id,
+  reposted_by,
   callApi,
   setCallApi,
   messageToolTip,
@@ -33,12 +38,17 @@ export default function Post({
   const config = { headers: { Authorization: `Bearer ${userData.token}` } };
   const userId = JSON.parse(localStorage.getItem("user")).user_id;
   const navigate = useNavigate();
+  const [modalIsOpen, setModalIsOpen] = useState(false)
 
   useEffect(() => {
     setLike(liked);
   }, [liked]);
 
   async function likeOrDeslike(value) {
+    if (reposted_by) {
+      alert("Não é possível curtir um re-post")
+      return
+    }
     if (value) {
       setLike(true);
       try {
@@ -61,23 +71,41 @@ export default function Post({
     getPosts();
   }
 
-  async function repost() {
+  function openModalRepost() {
+    if (reposted_by) {
+      alert("Não é possível re-postar um re-post")
+      return
+    }
+    
     if (userId === post_userId) {
       alert("Não é possível re-postar o próprio post")
       return
     }
-    alert("Deseja mesmo repostar?")
+    setModalIsOpen(true)
+  }
+
+  async function repost() {
     try {
       await postRepost({config, postId})
       getPosts();
       setCallApi(true);
-      return;
+      
     } catch (error) {
       alert("Você já re-postou esse post!")
     }
+    setModalIsOpen(false)
   }
 
+
   return (
+    <Box>
+    {repost_user_id ? 
+    <RepostBox>
+      <BiRepost className = {"icon"}/>
+      <RepostMessage>{userId === repost_user_id ? "Re-posted by you" : `Re-posted by ${reposted_by}`}</RepostMessage> 
+    </RepostBox>
+    : ""
+    }
     <PostBox>
       <UserAndLikes>
         <UserImage
@@ -102,7 +130,7 @@ export default function Post({
             <Count>0 comments</Count>
           </CommentCount>
           <RepostCount>
-            <BiRepost color = {"white"} onClick = {repost}/>
+            <BiRepost color = {"white"} onClick = {openModalRepost}/>
             <Count>{repostsCount} {repostsCount === 1 ? "re-post" : "re-posts"}</Count>
           </RepostCount>
         </IconContext.Provider>
@@ -112,7 +140,6 @@ export default function Post({
           effect="float"
           type="light"
         >
-          
           <Message>{messageToolTip}</Message>
         </ReactTooltip>
       </UserAndLikes>
@@ -126,12 +153,62 @@ export default function Post({
         callApi={callApi}
         setCallApi={setCallApi}
       />
+      {modalIsOpen ? 
+        <Modal isOpen={modalIsOpen} style={customStyles}>
+            <ModalTitle>
+              Do you want to re-post this link?
+            </ModalTitle>
+            <ModalButtons>
+              <Cancel onClick={() => setModalIsOpen(false)}>No, go back</Cancel>
+              <Submit onClick={repost}>Yes, share!</Submit>
+            </ModalButtons>
+        </Modal> : ""
+      }
     </PostBox>
+    </Box>
   );
 }
 
-const PostBox = styled.div`
+const Box = styled.div`
+  border: 1px solid #333333;
+  position: relative;
   width: 611px;
+
+  @media (max-width: 850px) {
+    width: 100vw;
+    min-height: 232px;
+  }
+`
+const RepostBox = styled.div`
+  background-color: #1E1E1E;
+  border-radius: 16px;
+  height: 100px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: -1;
+  display: flex;
+  justify-content: left;
+  align-items: top;
+  padding: 10px 0 0 20px;
+
+  && .icon {
+    margin-top: -4px;
+    color: white;
+    font-size: 22px;
+  }
+`
+const RepostMessage = styled.p`
+  font-family: 'Lato';
+  font-weight: 400;
+  font-size: 11px;
+  color: #FFFFFF;
+  margin-left: 10px;
+`
+const PostBox = styled.div`
+  margin-top: 40px;
+  width: 100%;
   min-height: 276px;
   background-color: #171717;
   border-radius: 16px;
@@ -141,8 +218,6 @@ const PostBox = styled.div`
   align-items: top;
 
   @media (max-width: 850px) {
-    width: 100vw;
-    min-height: 232px;
     border-radius: 0;
   }
 `;
@@ -192,3 +267,41 @@ const RepostCount = styled(CommentCount)`
   color:white;
 `
 const Count = styled(LikesCount)``
+
+///////////// compartilhar
+const ModalTitle = styled.div`
+  width: 345px;
+  font-family: "Lato", sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 40.8px;
+  color: white;
+  margin-bottom: 40px;
+  text-align: center;
+`;
+const ModalButtons = styled.div`
+  width: 295px;
+  height: 38px;
+  display: flex;
+  justify-content: space-between;
+`;
+const Cancel = styled.button`
+  width: 134px;
+  height: 37px;
+  border-radius: 5px;
+  background-color: white;
+
+  font-family: "Lato", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 21.6px;
+  color: #1877f2;
+
+  box-shadow: none;
+  border: none;
+  cursor: pointer;
+`;
+const Submit = styled(Cancel)`
+    background-color: #1877f2;
+    color: white;
+`;
