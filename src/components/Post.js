@@ -20,6 +20,7 @@ export default function Post({
   metadata,
   liked,
   likesCount,
+  repostsCount,
   callApi,
   setCallApi,
   messageToolTip,
@@ -28,9 +29,9 @@ export default function Post({
   
   const [like, setLike] = useState(liked);
   const heartColor = like ? "red" : "white"
-  const likesIsOne = likesCount === "1" ? "1 like" : ` ${likesCount} likes`;
   const { userData } = useContext(UserContext);
   const config = { headers: { Authorization: `Bearer ${userData.token}` } };
+  const userId = JSON.parse(localStorage.getItem("user")).user_id;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,12 +61,19 @@ export default function Post({
     getPosts();
   }
 
-  function repost() {
+  async function repost() {
+    if (userId === post_userId) {
+      alert("Não é possível re-postar o próprio post")
+      return
+    }
     alert("Deseja mesmo repostar?")
     try {
-      postRepost({config, postId})
+      await postRepost({config, postId})
+      getPosts();
+      setCallApi(true);
+      return;
     } catch (error) {
-      console.error(error, "Unable to communicate")
+      alert("Você já re-postou esse post!")
     }
   }
 
@@ -86,7 +94,7 @@ export default function Post({
               <IoIosHeartEmpty onClick={() => likeOrDeslike(true)} />
             )}
             <LikesCount data-tip data-for={messageToolTip}>
-              {!likesCount ? "0 likes" : likesIsOne}
+              {likesCount} {likesCount === 1 ? "like" : "likes"}
             </LikesCount>
           </Likes>
           <CommentCount>
@@ -95,7 +103,7 @@ export default function Post({
           </CommentCount>
           <RepostCount>
             <BiRepost color = {"white"} onClick = {repost}/>
-            <Count>0 re-posts</Count>
+            <Count>{repostsCount} {repostsCount === 1 ? "re-post" : "re-posts"}</Count>
           </RepostCount>
         </IconContext.Provider>
         <ReactTooltip

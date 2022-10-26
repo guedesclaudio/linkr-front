@@ -93,7 +93,7 @@ function getFollowedList(token) {
 }
 
 function postRepost({config, postId}) {
-  return axios.post(`${baseUrlTest}/reposts`, postId, config)
+  return axios.post(`${baseUrlTest}/reposts`, {postId}, config)
 }
 
 export {

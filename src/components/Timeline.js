@@ -55,6 +55,7 @@ export default function Timeline() {
                 liked={value.liked}
                 likesCount={value.likesCount}
                 messageToolTip={value.messageToolTip}
+                repostsCount = {value.repostsCount}
                 callApi={callApi}
                 setCallApi={setCallApi}
                 getPosts = {getPosts}
