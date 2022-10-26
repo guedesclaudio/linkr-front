@@ -92,8 +92,12 @@ function getFollowedList(token) {
   return axios.get(`${baseUrlTest}/followers`, config);
 }
 
-function postRepost({config, postId}) {
-  return axios.post(`${baseUrlTest}/reposts`, {postId}, config)
+function getUserById(userId) {
+  return axios.get(`${baseUrlTest}/users/${userId}`);
+}
+
+function postRepost({ config, postId }) {
+  return axios.post(`${baseUrlTest}/reposts`, postId, config);
 }
 
 export {
@@ -111,5 +115,6 @@ export {
   getHashtag,
   postFollowOrUnfollow,
   getFollowedList,
-  postRepost
+  getUserById,
+  postRepost,
 };
