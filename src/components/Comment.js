@@ -34,7 +34,7 @@ const customStyles = {
   },
 };
 
-export default function Comment({ body, post_id, post_userId, callApi, setCallApi }) {
+export default function Comment({ body, post_id, post_userId, callApi, setCallApi, getPosts }) {
   const navigate = useNavigate();
   const { userData, setMessage, setPosts } = useContext(UserContext);
   const [isEditable, setIsEditable] = useState(false);
@@ -46,8 +46,14 @@ export default function Comment({ body, post_id, post_userId, callApi, setCallAp
   const userId = JSON.parse(localStorage.getItem("user")).user_id;
   const userToken =
     JSON.parse(localStorage.getItem("user")).token || userData.token;
+
+
+  
   const [send, setSend] = useState({ body });
   let newBody = body;
+
+
+
 
   const inputRef = useRef();
 
@@ -81,7 +87,8 @@ export default function Comment({ body, post_id, post_userId, callApi, setCallAp
         setIsPublish(true);
         setIsEditable(false);
         setIsDisabled(false);
-        setTimeout(() => setCallApi(callApi + 1), 250);
+        setCallApi(true);
+        getPosts();
 
       } catch (error) {
         alert("Unable to save changes");
@@ -89,9 +96,12 @@ export default function Comment({ body, post_id, post_userId, callApi, setCallAp
       }
     }
   }
-
+console.log(send.body);
+console.log(newBody);
   async function deleteThisPost() {
     setIsLoading(true);
+    console.log(userToken);
+    console.log(post_id);
 
     try {
       await deletePost(userToken, post_id);
@@ -127,7 +137,7 @@ export default function Comment({ body, post_id, post_userId, callApi, setCallAp
   return (
     <div>
       {modalIsOpen ? (
-        <Modal isOpen={modalIsOpen} style={customStyles}>
+        <Modal isOpen={modalIsOpen} style={customStyles} ariaHideApp={false}>
           {isLoading ? (
             <ReactLoading
               type="balls"
@@ -171,7 +181,7 @@ export default function Comment({ body, post_id, post_userId, callApi, setCallAp
         ""
       )}
 
-      {!isEditable ? (
+      {!isEditable && send?.body ? (
         <Body>
           <ReactTagify
             tagStyle={tagStyle}

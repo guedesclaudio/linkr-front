@@ -117,6 +117,7 @@ export default function Post({
         post_userId={post_userId}
         callApi={callApi}
         setCallApi={setCallApi}
+        getPosts={getPosts}
       />
     </PostBox>
   );
