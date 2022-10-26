@@ -178,8 +178,8 @@ export default function Comment({
         <Body>
           <ReactTagify
             tagStyle={tagStyle}
-            tagClicked={
-              (tag) => navigate(`/hashtag/${tag.slice(1).toLowerCase()}`) /*  */
+            tagClicked={(tag) =>
+              navigate(`/hashtag/${tag.slice(1).toLowerCase()}`)
             }
           >
             {isPublish ? send.body : newBody}
