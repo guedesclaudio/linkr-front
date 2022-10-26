@@ -18,10 +18,10 @@ import { getUserById } from "../services/services";
 export default function UserPosts() {
   const { user_id } = useParams();
   const { posts, message, setMessage } = useContext(UserContext);
-  const [isFollowed, setIsFollowed] = useState(null);
   const [callApi, setCallApi] = useState(0);
   const [userPosts, setUserPosts] = useState([]);
   const [existingUsername, setExistingUsername] = useState("");
+  const [isFollowed, setIsFollowed] = useState(null);
 
   useEffect(() => {
     const response = checkFollow(user_id);
@@ -47,7 +47,7 @@ export default function UserPosts() {
     } else if (userPosts.length === 0) {
       setMessage("User does not have posts yet!");
     }
-  }, [callApi, existingUsername]);
+  }, [callApi, existingUsername, user_id]);
 
   return (
     <>
