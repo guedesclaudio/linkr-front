@@ -10,8 +10,7 @@ export default function PostContents({
   post_id,
   post_userId,
   callApi,
-  setCallApi,
-  getPosts
+  setCallApi
 }) {
   const navigate = useNavigate();
   return (
@@ -25,8 +24,7 @@ export default function PostContents({
         post_id={post_id} 
         post_userId={post_userId}
         callApi={callApi}
-        setCallApi={setCallApi}
-        getPosts={getPosts} />
+        setCallApi={setCallApi} />
 
       <a href={post_url} target="_blank">
         <Link>

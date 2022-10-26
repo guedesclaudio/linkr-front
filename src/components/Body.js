@@ -154,7 +154,7 @@ export default function Body({ body, post_id, post_userId, setCallApi }) {
             tagStyle={tagStyle}
             tagClicked={(tag) => navigate(`/hashtag/${tag.slice(1)}`)}
           >
-            { newText }
+            { newBody }
           </ReactTagify>
         </Text>
       ) : (
