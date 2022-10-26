@@ -4,7 +4,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import { BsFillPencilFill } from "react-icons/bs";
 import { useRef, useContext, useState, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { postNewBody, deletePost, getPostsData } from "../services/services";
+import { postNewBody, deletePost } from "../services/services";
 import Modal from "react-modal";
 import ReactLoading from "react-loading";
 import { useNavigate } from "react-router-dom";
@@ -34,27 +34,18 @@ const customStyles = {
   },
 };
 
-export default function Comment({ body, post_id, post_userId, callApi, setCallApi, getPosts }) {
+export default function Comment({ body, post_id, post_userId, setCallApi }) {
   const navigate = useNavigate();
-  const { userData, setMessage, setPosts } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
   const [isEditable, setIsEditable] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [editIsClicked, setIsClicked] = useState(false);
-  const [isPublish, setIsPublish] = useState(false);
   const userId = JSON.parse(localStorage.getItem("user")).user_id;
-  const userToken =
-    JSON.parse(localStorage.getItem("user")).token || userData.token;
-
-
-  
+  const userToken = JSON.parse(localStorage.getItem("user")).token || userData.token;
   const [send, setSend] = useState({ body });
   let newBody = body;
-
-
-
-
   const inputRef = useRef();
 
   useEffect(() => {
@@ -62,7 +53,6 @@ export default function Comment({ body, post_id, post_userId, callApi, setCallAp
         inputRef.current.focus();
     }
   }, [editIsClicked]);
-
 
   function handleForm(e) {
     setSend({
@@ -74,7 +64,6 @@ export default function Comment({ body, post_id, post_userId, callApi, setCallAp
   async function submitChanges(e) {
     if (e.key === "Escape") {
       setSend({ body: newBody });
-      setIsPublish(false);
       setIsEditable(false);
 
     } else if (e.key === "Enter") {
@@ -82,13 +71,11 @@ export default function Comment({ body, post_id, post_userId, callApi, setCallAp
 
       try {
         const response = await postNewBody(userToken, post_id, send);
+        await setCallApi(true);
         setSend(response.data);
-        newBody = response.data.body;
-        setIsPublish(true);
+        newBody = send.body;
         setIsEditable(false);
         setIsDisabled(false);
-        setCallApi(true);
-        getPosts();
 
       } catch (error) {
         alert("Unable to save changes");
@@ -96,8 +83,7 @@ export default function Comment({ body, post_id, post_userId, callApi, setCallAp
       }
     }
   }
-console.log(send.body);
-console.log(newBody);
+
   async function deleteThisPost() {
     setIsLoading(true);
     console.log(userToken);
@@ -107,26 +93,8 @@ console.log(newBody);
       await deletePost(userToken, post_id);
       setIsOpen(false);
       setIsLoading(false);
+      setCallApi(true);
 
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      };
-
-      try {
-        const response = await getPostsData(config);
-
-        if (response.data.length === 0) {
-          setMessage("There are no posts yet");
-        }
-        setPosts(response.data);
-      } catch (error) {
-        setMessage(
-          "An error occured while trying to fetch the posts, please refresh the page"
-        );
-        console.log(error);
-      }
     } catch (error) {
       setIsOpen(false);
       setIsLoading(false);
@@ -169,7 +137,6 @@ console.log(newBody);
             <BsFillPencilFill
               onClick={() => {
                 setIsClicked(!editIsClicked);
-                setIsPublish(false);
                 setSend({ body: newBody });
                 setIsEditable(!isEditable);
               }}
@@ -181,13 +148,13 @@ console.log(newBody);
         ""
       )}
 
-      {!isEditable && send?.body ? (
+      {!isEditable ? (
         <Body>
           <ReactTagify
             tagStyle={tagStyle}
             tagClicked={(tag) => navigate(`/hashtag/${tag.slice(1)}`)}
           >
-            { isPublish ? send.body : newBody }
+            { newBody }
           </ReactTagify>
         </Body>
       ) : (
