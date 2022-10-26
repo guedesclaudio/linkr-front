@@ -1,16 +1,44 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import checkFollow from "../helpers/checkFollow";
 
-export default function SearchUser({ userId, username, picture_url }) {
+export default function SearchUser({
+  userId,
+  username,
+  picture_url,
+  setSearch,
+}) {
   const navigate = useNavigate();
+  const [isFollowed, setIsFollowed] = useState(null);
+
+  useEffect(() => {
+    const response = checkFollow(userId);
+    response.then((res) => {
+      setIsFollowed(res);
+    });
+  }, []);
+
   return (
     <Wrapper>
       <img
-        onClick={() => navigate(`/users/${userId}`)}
+        onClick={() => {
+          setSearch("");
+          navigate(`/users/${userId}`);
+        }}
         src={picture_url}
         alt=""
       />
-      <h1 onClick={() => navigate(`/users/${userId}`)}> {username} </h1>
+      <h1
+        onClick={() => {
+          setSearch("");
+          navigate(`/users/${userId}`);
+        }}
+      >
+        {" "}
+        {username}{" "}
+      </h1>
+      {isFollowed === "following" ? <Following>• following</Following> : ""}
     </Wrapper>
   );
 }
@@ -37,5 +65,14 @@ const Wrapper = styled.div`
     color: #515151;
     margin: 0px 10px;
     cursor: pointer;
+    font-family: "Lato";
   }
+`;
+
+const Following = styled.span`
+  font-family: "Lato";
+  color: #c5c5c5;
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 23px;
 `;
