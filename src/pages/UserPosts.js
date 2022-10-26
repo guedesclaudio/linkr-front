@@ -123,14 +123,12 @@ const Title = styled.div`
   display: flex;
   align-items: center;
   position: relative;
-
   img {
     border-radius: 50%;
     width: 50px;
     height: 50px;
     margin: 8px 12px 0 0;
   }
-
   @media (max-width: 850px) {
     width: 100vw;
     padding-left: 17px;

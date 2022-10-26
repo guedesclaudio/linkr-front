@@ -34,7 +34,13 @@ const customStyles = {
   },
 };
 
-export default function Comment({ body, post_id, post_userId, callApi, setCallApi }) {
+export default function Comment({
+  body,
+  post_id,
+  post_userId,
+  callApi,
+  setCallApi,
+}) {
   const navigate = useNavigate();
   const { userData, setMessage, setPosts } = useContext(UserContext);
   const [isEditable, setIsEditable] = useState(false);
@@ -53,10 +59,9 @@ export default function Comment({ body, post_id, post_userId, callApi, setCallAp
 
   useEffect(() => {
     if (editIsClicked) {
-        inputRef.current.focus();
+      inputRef.current.focus();
     }
   }, [editIsClicked]);
-
 
   function handleForm(e) {
     setSend({
@@ -70,7 +75,6 @@ export default function Comment({ body, post_id, post_userId, callApi, setCallAp
       setSend({ body: newBody });
       setIsPublish(false);
       setIsEditable(false);
-
     } else if (e.key === "Enter") {
       setIsDisabled(true);
 
@@ -82,7 +86,6 @@ export default function Comment({ body, post_id, post_userId, callApi, setCallAp
         setIsEditable(false);
         setIsDisabled(false);
         setTimeout(() => setCallApi(callApi + 1), 250);
-
       } catch (error) {
         alert("Unable to save changes");
         setIsDisabled(false);
@@ -175,9 +178,11 @@ export default function Comment({ body, post_id, post_userId, callApi, setCallAp
         <Body>
           <ReactTagify
             tagStyle={tagStyle}
-            tagClicked={(tag) => navigate(`/hashtag/${tag.slice(1)}`)}
+            tagClicked={(tag) =>
+              navigate(`/hashtag/${tag.slice(1).toLowerCase()}`)
+            }
           >
-            { isPublish ? send.body : newBody }
+            {isPublish ? send.body : newBody}
           </ReactTagify>
         </Body>
       ) : (
@@ -209,20 +214,29 @@ const Body = styled.h1`
   color: #b7b7b7;
   margin-bottom: 6px;
 `;
-const EditableBody = styled.input`
+const EditableBody = styled.textarea`
   width: 503px;
   min-height: 44px;
+  height: 100px;
+  resize: horizontal;
+  word-break: break-word;
   padding: 5px 20px;
   border-radius: 7px;
   background-color: white;
   border: none;
   box-shadow: none;
-
   font-family: "Lato", sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 16.8px;
   color: #4c4c4c;
+
+  @media (max-width: 850px) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 const ModificationIcons = styled.div`
   width: 46px;
@@ -253,18 +267,16 @@ const Cancel = styled.button`
   height: 37px;
   border-radius: 5px;
   background-color: white;
-
   font-family: "Lato", sans-serif;
   font-size: 18px;
   font-weight: 700;
   line-height: 21.6px;
   color: #1877f2;
-
   box-shadow: none;
   border: none;
   cursor: pointer;
 `;
 const Submit = styled(Cancel)`
-    background-color: #1877f2;
-    color: white;
+  background-color: #1877f2;
+  color: white;
 `;
