@@ -4,6 +4,7 @@ import { postSearchUser } from "../services/services";
 import SearchUser from "./SearchUser";
 import { DebounceInput } from "react-debounce-input";
 import { UserContext } from "../contexts/UserContext";
+import { FiSearch } from "react-icons/fi";
 
 export default function Search() {
   const { userData } = useContext(UserContext);
@@ -40,7 +41,9 @@ export default function Search() {
           onChange={(e) => setSearch(e.target.value)}
         ></DebounceInput>
       </BoxSearch>
-
+      <StyledSearch>
+        <FiSearch />
+      </StyledSearch>
       <ResultList>
         {list.map((value, index) => (
           <SearchUser
@@ -59,6 +62,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
 `;
 const BoxSearch = styled.form`
   input {
@@ -95,4 +99,14 @@ const ResultList = styled.div`
     height: auto;
     margin-top: 58px;
   }
+`;
+const StyledSearch = styled.div`
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  z-index: 8;
+  font-size: 19px;
+  color: #c6c6c6;
+  font-size: 28px;
+  cursor: pointer;
 `;
