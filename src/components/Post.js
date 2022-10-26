@@ -2,8 +2,8 @@ import styled from "styled-components";
 import PostContents from "./PostContents.js";
 import ReactTooltip from "react-tooltip";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
-import { BiRepost } from "react-icons/bi"
-import { AiOutlineComment } from "react-icons/ai"
+import { BiRepost } from "react-icons/bi";
+import { AiOutlineComment } from "react-icons/ai";
 import { IconContext } from "react-icons";
 import { useEffect, useState, useContext } from "react";
 import { sendLikeOrDeslike, postRepost } from "../services/services";
@@ -23,11 +23,10 @@ export default function Post({
   callApi,
   setCallApi,
   messageToolTip,
-  getPosts
+  getPosts,
 }) {
-  
   const [like, setLike] = useState(liked);
-  const heartColor = like ? "red" : "white"
+  const heartColor = like ? "red" : "white";
   const likesIsOne = likesCount === "1" ? "1 like" : ` ${likesCount} likes`;
   const { userData } = useContext(UserContext);
   const config = { headers: { Authorization: `Bearer ${userData.token}` } };
@@ -43,9 +42,9 @@ export default function Post({
       try {
         await sendLikeOrDeslike({ postId, likeValue: true, config });
       } catch (error) {
-        console.error(error, "Unable to communicate")
+        console.error(error, "Unable to communicate");
       }
-      
+
       getPosts();
       setCallApi(true);
       return;
@@ -54,18 +53,18 @@ export default function Post({
     try {
       sendLikeOrDeslike({ postId, likeValue: false, config });
     } catch (error) {
-      console.error(error, "Unable to communicate")
+      console.error(error, "Unable to communicate");
     }
     setCallApi(true);
     getPosts();
   }
 
   function repost() {
-    alert("Deseja mesmo repostar?")
+    alert("Deseja mesmo repostar?");
     try {
-      postRepost({config, postId})
+      postRepost({ config, postId });
     } catch (error) {
-      console.error(error, "Unable to communicate")
+      console.error(error, "Unable to communicate");
     }
   }
 
@@ -90,11 +89,11 @@ export default function Post({
             </LikesCount>
           </Likes>
           <CommentCount>
-            <AiOutlineComment color = {"white"}/>
+            <AiOutlineComment color={"white"} />
             <Count>0 comments</Count>
           </CommentCount>
           <RepostCount>
-            <BiRepost color = {"white"} onClick = {repost}/>
+            <BiRepost color={"white"} onClick={repost} />
             <Count>0 re-posts</Count>
           </RepostCount>
         </IconContext.Provider>
@@ -104,7 +103,6 @@ export default function Post({
           effect="float"
           type="light"
         >
-          
           <Message>{messageToolTip}</Message>
         </ReactTooltip>
       </UserAndLikes>
@@ -158,8 +156,7 @@ const UserAndLikes = styled.div`
     cursor: pointer;
   }
 `;
-const Likes = styled(UserAndLikes)`
-`;
+const Likes = styled(UserAndLikes)``;
 const LikesCount = styled.p`
   font-family: "Lato", sans-serif;
   font-size: 13px;
@@ -177,10 +174,9 @@ const CommentCount = styled.div`
   justify-content: top;
   align-items: center;
   flex-direction: column;
-  
-`
+`;
 const RepostCount = styled(CommentCount)`
   margin-bottom: 20px;
-  color:white;
-`
-const Count = styled(LikesCount)``
+  color: white;
+`;
+const Count = styled(LikesCount)``;

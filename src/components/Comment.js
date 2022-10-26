@@ -214,9 +214,12 @@ const Body = styled.h1`
   color: #b7b7b7;
   margin-bottom: 6px;
 `;
-const EditableBody = styled.input`
+const EditableBody = styled.textarea`
   width: 503px;
   min-height: 44px;
+  height: 100px;
+  resize: horizontal;
+  word-break: break-word;
   padding: 5px 20px;
   border-radius: 7px;
   background-color: white;
@@ -227,6 +230,13 @@ const EditableBody = styled.input`
   font-weight: 400;
   line-height: 16.8px;
   color: #4c4c4c;
+
+  @media (max-width: 850px) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 const ModificationIcons = styled.div`
   width: 46px;
