@@ -40,7 +40,7 @@ export default function Post({
   const userId = JSON.parse(localStorage.getItem("user")).user_id;
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false)
-  const msgToolTipId = repost_user_id ? `${repost_id}` : `${postId}`
+  const msgToolTipId =  `${postId}`
 
   useEffect(() => {
     setLike(liked);
