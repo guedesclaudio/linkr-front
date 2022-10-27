@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function PostContents({
   username,
+  picture_url,
   body,
   post_url,
   metadata,
@@ -13,9 +14,14 @@ export default function PostContents({
   setCallApi,
 }) {
   const navigate = useNavigate();
+
+  function goUserPage() {
+    localStorage.setItem("userPage", JSON.stringify({name: username, userId: post_userId, userImage: picture_url}))
+    navigate(`/users/${post_userId}`)
+  }
   return (
     <Contents>
-      <UserName onClick={() => navigate(`/users/${post_userId}`)}>
+      <UserName onClick={goUserPage}>
         {username}
       </UserName>
 

@@ -28,6 +28,7 @@ export default function Timeline() {
       followed_list = res.data;
     });
   };
+  
   const getPosts = () => {
     getPostsData(config)
       .then((res) => {
