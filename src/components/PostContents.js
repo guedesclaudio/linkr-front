@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Comment from "./Comment";
+import Body from "./Body";
 import { useNavigate } from "react-router-dom";
 
 export default function PostContents({
@@ -19,9 +19,9 @@ export default function PostContents({
         {username}
       </UserName>
 
-      <Comment
-        body={body}
-        post_id={post_id}
+      <Body 
+        body={body} 
+        post_id={post_id} 
         post_userId={post_userId}
         callApi={callApi}
         setCallApi={setCallApi}

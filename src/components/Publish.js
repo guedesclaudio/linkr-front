@@ -4,15 +4,14 @@ import styled from "styled-components";
 import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext.js";
 
-
-export default function Publish({callApi, setCallApi}) {
+export default function Publish({ setCallApi }) {
   const [form, setForm] = useState({
     post_url: "",
     body: "",
   });
   const [isDisabled, setIsDisabled] = useState(false);
   const [thereWasError, setThereWasError] = useState(false);
-  const { setPosts, userData, setMessage } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
 
   function handleForm(e) {
     setForm({
@@ -39,7 +38,8 @@ export default function Publish({callApi, setCallApi}) {
         post_url: "",
         body: "",
       });
-      setCallApi(true)
+      setCallApi(true);
+
     } catch (error) {
       setThereWasError(true);
       setIsDisabled(false);

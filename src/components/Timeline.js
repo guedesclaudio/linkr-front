@@ -68,7 +68,7 @@ export default function Timeline() {
     <MainContainer>
       <TimelineWrapper>
         <Title>timeline</Title>
-        <Publish callApi = {callApi} setCallApi = {setCallApi}></Publish>
+        <Publish setCallApi={setCallApi}></Publish>
         <Container>
           {followedPosts.length > 0 ? (
             followedPosts.map((value, index) => (

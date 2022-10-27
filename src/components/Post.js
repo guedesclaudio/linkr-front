@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import PostContents from "./PostContents.js";
+import Comments from "./Comments.js";
 import ReactTooltip from "react-tooltip";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 import { BiRepost } from "react-icons/bi";
@@ -155,6 +156,7 @@ export default function Post({
         callApi={callApi}
         setCallApi={setCallApi}
       />
+      <Comments />
       {modalIsOpen ? 
         <Modal isOpen={modalIsOpen} style={customStyles}>
             <ModalTitle>
