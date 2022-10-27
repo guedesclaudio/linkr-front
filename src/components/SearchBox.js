@@ -1,11 +1,10 @@
 import styled from "styled-components";
 import { useEffect, useState, useContext } from "react";
-import { postSearchUser } from "../services/services";
+import { getFollowedList, postSearchUser } from "../services/services";
 import SearchUser from "./SearchUser";
 import { DebounceInput } from "react-debounce-input";
 import { UserContext } from "../contexts/UserContext";
 import { FiSearch } from "react-icons/fi";
-import checkFollow from "../helpers/checkFollow";
 
 export default function Search() {
   const { userData } = useContext(UserContext);
@@ -13,36 +12,43 @@ export default function Search() {
   const [list, setList] = useState([]);
   const userToken =
     JSON.parse(localStorage.getItem("user")).token || userData.token;
-  async function sendSearch() {
-    if (search.length > 2) {
-      try {
-        const promise = await postSearchUser(userToken, { search });
-        setList(promise.data);
-        promise.data.map((value) => {
-          checkFollow(value.id).then((res) => {
-            const isFollowed = res;
-            // console.log(isFollowed);
-            value.isFollowed = isFollowed;
-          });
-        });
-      } catch (error) {
-        alert(JSON.stringify(error.response.data));
-        console.log(error);
-      }
-    } else {
-      setList([]);
-    }
-  }
 
   useEffect(() => {
-    sendSearch();
+    async function sendSearch() {
+      if (search.length > 2) {
+        try {
+          const followed_list = await getFollowedList(userToken);
+          const promise = await postSearchUser(userToken, { search });
+          let newList = promise.data;
+          newList.map((user) => {
+            if (
+              followed_list.data.find(
+                (item) => Number(item.followed_id) === Number(user.id)
+              )
+            )
+              user.isFollowed = "following";
+          });
+          return newList;
+        } catch (error) {
+          console.log(error);
+          alert(JSON.stringify(error.response.data));
+        }
+      } else {
+        setList([]);
+      }
+    }
+    async function filterFollowedUsers(filteredList) {
+      if (filteredList !== undefined) setList(filteredList);
+    }
+    const res = sendSearch();
+    res.then((searchList) => filterFollowedUsers(searchList));
   }, [search]);
 
   return (
     <Wrapper>
       <BoxSearch>
         <DebounceInput
-          autocomplete="off"
+          autoComplete="off"
           placeholder="Search for people"
           type="text"
           name="search"
@@ -55,16 +61,22 @@ export default function Search() {
         <FiSearch />
       </StyledSearch>
       <ResultList>
-        {list.map((value, index) => (
-          <SearchUser
-            key={index}
-            userId={value.id}
-            username={value.username}
-            picture_url={value.picture_url}
-            setSearch={setSearch}
-            isFollowed={value.isFollowed}
-          />
-        ))}
+        {list.length !== 0
+          ? list
+              .sort((a, b) => {
+                if (a.isFollowed == "following") return -1;
+              })
+              .map((value, index) => (
+                <SearchUser
+                  key={index}
+                  userId={value.id}
+                  username={value.username}
+                  picture_url={value.picture_url}
+                  setSearch={setSearch}
+                  isFollowed={value.isFollowed}
+                />
+              ))
+          : ""}
       </ResultList>
     </Wrapper>
   );
@@ -107,7 +119,7 @@ const BoxSearch = styled.form`
 const ResultList = styled.div`
   @media (max-width: 850px) {
     position: absolute;
-    width: 95%;
+    width: 100%;
     height: auto;
     margin-top: 58px;
   }
