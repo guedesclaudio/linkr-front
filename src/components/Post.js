@@ -24,6 +24,7 @@ export default function Post({
   liked,
   likesCount,
   repostsCount,
+  repost_id,
   repost_user_id,
   reposted_by,
   callApi,
@@ -38,7 +39,7 @@ export default function Post({
   const userId = JSON.parse(localStorage.getItem("user")).user_id;
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false)
-
+  const msgToolTipId = repost_user_id ? `${repost_id}` : `${postId}`
 
   useEffect(() => {
     setLike(liked);
@@ -122,7 +123,7 @@ export default function Post({
             ) : (
               <IoIosHeartEmpty onClick={() => likeOrDeslike(true)} />
             )}
-            <LikesCount data-tip data-for={messageToolTip}>
+            <LikesCount data-tip data-for={msgToolTipId}>
               {likesCount} {likesCount === 1 ? "like" : "likes"}
             </LikesCount>
           </Likes>
@@ -136,7 +137,7 @@ export default function Post({
           </RepostCount>
         </IconContext.Provider>
         <ReactTooltip
-          id={messageToolTip}
+          id={msgToolTipId}
           place="bottom"
           effect="float"
           type="light"
