@@ -68,7 +68,7 @@ export default function Timeline() {
     <MainContainer>
       <TimelineWrapper>
         <Title>timeline</Title>
-        <Publish></Publish>
+        <Publish setCallApi={setCallApi}></Publish>
         <Container>
           {followedPosts.length > 0 ? (
             followedPosts.map((value, index) => (
@@ -84,6 +84,10 @@ export default function Timeline() {
                 liked={value.liked}
                 likesCount={value.likesCount}
                 messageToolTip={value.messageToolTip}
+                repostsCount = {value.repostsCount}
+                repost_id = {value.repost_id}
+                repost_user_id = {value.repost_user_id}
+                reposted_by = {value.reposted_by}
                 callApi={callApi}
                 setCallApi={setCallApi}
                 getPosts={getPosts}

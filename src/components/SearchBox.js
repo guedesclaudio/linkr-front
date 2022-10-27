@@ -4,6 +4,7 @@ import { getFollowedList, postSearchUser } from "../services/services";
 import SearchUser from "./SearchUser";
 import { DebounceInput } from "react-debounce-input";
 import { UserContext } from "../contexts/UserContext";
+import { FiSearch } from "react-icons/fi";
 
 export default function Search() {
   const { userData } = useContext(UserContext);
@@ -47,6 +48,7 @@ export default function Search() {
     <Wrapper>
       <BoxSearch>
         <DebounceInput
+          autoComplete="off"
           placeholder="Search for people"
           type="text"
           name="search"
@@ -55,7 +57,9 @@ export default function Search() {
           onChange={(e) => setSearch(e.target.value)}
         ></DebounceInput>
       </BoxSearch>
-
+      <StyledSearch>
+        <FiSearch />
+      </StyledSearch>
       <ResultList>
         {list.length !== 0
           ? list
@@ -82,6 +86,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
 `;
 const BoxSearch = styled.form`
   input {
@@ -114,8 +119,18 @@ const BoxSearch = styled.form`
 const ResultList = styled.div`
   @media (max-width: 850px) {
     position: absolute;
-    width: 95%;
+    width: 100%;
     height: auto;
     margin-top: 58px;
   }
+`;
+const StyledSearch = styled.div`
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  z-index: 8;
+  font-size: 19px;
+  color: #c6c6c6;
+  font-size: 28px;
+  cursor: pointer;
 `;
