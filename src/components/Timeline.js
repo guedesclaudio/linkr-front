@@ -36,7 +36,7 @@ export default function Timeline() {
           (post) =>
             post.user_id === userId ||
             followed_list.find(
-              (item) => Number(item.followed_id) === Number(post.user_id)
+              (item) => Number(item.followed_id) === Number(post.user_id) || Number(item.followed_id) === Number(post.repost_user_id)
             )
         );
         setFollowedPosts(filteredPosts);

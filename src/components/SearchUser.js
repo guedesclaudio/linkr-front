@@ -19,21 +19,20 @@ export default function SearchUser({
     });
   }, []);
 
+  function goUserPage() {
+    localStorage.setItem("userPage", JSON.stringify({name: username, userId, userImage: picture_url}))
+    navigate(`/users/${userId}`)
+  }
+
   return (
     <Wrapper>
       <img
-        onClick={() => {
-          setSearch("");
-          navigate(`/users/${userId}`);
-        }}
+        onClick={goUserPage}
         src={picture_url}
         alt=""
       />
       <h1
-        onClick={() => {
-          setSearch("");
-          navigate(`/users/${userId}`);
-        }}
+        onClick={goUserPage}
       >
         {" "}
         {username}{" "}
