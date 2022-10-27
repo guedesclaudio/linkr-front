@@ -3,16 +3,15 @@ import { insertPost } from "../services/services";
 import styled from "styled-components";
 import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext.js";
-import { getPostsData } from "../services/services";
 
-export default function Publish() {
+export default function Publish({ setCallApi }) {
   const [form, setForm] = useState({
     post_url: "",
     body: "",
   });
   const [isDisabled, setIsDisabled] = useState(false);
   const [thereWasError, setThereWasError] = useState(false);
-  const { setPosts, userData, setMessage } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
 
   function handleForm(e) {
     setForm({
@@ -39,20 +38,8 @@ export default function Publish() {
         post_url: "",
         body: "",
       });
+      setCallApi(true);
 
-      try {
-        const response = await getPostsData(config);
-
-        if (response.data.length === 0) {
-          setMessage("There are no posts yet");
-        }
-        setPosts(response.data);
-      } catch (error) {
-        setMessage(
-          "An error occured while trying to fetch the posts, please refresh the page"
-        );
-        console.log(error);
-      }
     } catch (error) {
       setThereWasError(true);
       setIsDisabled(false);
