@@ -99,6 +99,11 @@ export default function Post({
     setModalIsOpen(false)
   }
 
+  function goUserPage() {
+    localStorage.setItem("userPage", JSON.stringify({name: username, userId: post_userId, userImage: picture_url}))
+    navigate(`/users/${post_userId}`)
+  }
+
 
   return (
     <Box>
@@ -112,7 +117,7 @@ export default function Post({
     <PostBox margin = {repost_user_id ? "40px" : "0px"}>
       <UserAndLikes>
         <UserImage
-          onClick={() => navigate(`/users/${post_userId}`)}
+          onClick={goUserPage}
           src={picture_url}
         />
         <IconContext.Provider
@@ -148,6 +153,7 @@ export default function Post({
       </UserAndLikes>
       <PostContents
         username={username}
+        picture_url = {picture_url}
         body={body}
         post_url={post_url}
         metadata={metadata}

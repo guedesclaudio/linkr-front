@@ -7,7 +7,10 @@ import UserPosts from "../pages/UserPosts";
 import HashtagPosts from "../pages/HashtagPosts";
 import { UserStorage } from "../contexts/UserContext";
 
+
 export default function App() {
+
+
   return (
     <>
       <UserStorage>

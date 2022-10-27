@@ -22,24 +22,30 @@ export default function UserPosts() {
   const [userPosts, setUserPosts] = useState([]);
   const [existingUsername, setExistingUsername] = useState("");
   const [isFollowed, setIsFollowed] = useState(null);
+  const userDescription = JSON.parse(localStorage.getItem("userPage"))
+  const {userId} = userDescription
 
   useEffect(() => {
-    const response = checkFollow(user_id);
+    const response = checkFollow(userId);
     response.then((res) => {
       setIsFollowed(res);
     });
-    const request = getUserById(user_id);
+    const request = getUserById(userId);
     request.then((res) => {
       if (res.data.length !== 0) {
         setExistingUsername(res.data[0].username);
       }
     });
+    
     setUserPosts(
       posts.filter((post) => {
-        if (Number(post.user_id) === Number(user_id)) {
-          return post;
+        if (post.user_id !== Number(userId) && post.repost_user_id === null) {
+          return false
         }
-        return false;
+        if (post.repost_user_id !== null && post.repost_user_id !== Number(userId)) {
+          return false
+        }
+        return post;
       })
     );
     if (!existingUsername) {
@@ -54,11 +60,11 @@ export default function UserPosts() {
       <Navbar></Navbar>
       <MainContainer>
         <TimelineWrapper>
-          {userPosts[0] ? (
+          {userDescription ? (
             <Title>
-              <img src={userPosts[0].picture_url} alt="user" />
-              {userPosts[0].owner_post} posts
-              {isFollowed === "owner" ? (
+              <img src={userDescription.userImage} alt="user" />
+              {userDescription.name} posts
+              {isFollowed === "author" ? (
                 ""
               ) : (
                 <FollowButton
@@ -101,6 +107,7 @@ export default function UserPosts() {
                 reposted_by = {value.reposted_by}
                 callApi={callApi}
                 setCallApi={setCallApi}
+                
                 />
               ))
             ) : (
