@@ -86,18 +86,21 @@ export default function UserPosts() {
               userPosts.map((value, index) => (
                 <Post
                   key={index}
-                  post_userId={value.user_id}
-                  username={value.owner_post}
-                  picture_url={value.picture_url}
-                  postId={value.post_id}
-                  body={value.body}
-                  post_url={value.post_url}
-                  metadata={value.metadata}
-                  liked={value.liked}
-                  likesCount={value.likesCount}
-                  messageToolTip={value.messageToolTip}
-                  callApi={callApi}
-                  setCallApi={setCallApi}
+                post_userId={value.user_id}
+                username={value.owner_post}
+                picture_url={value.picture_url}
+                postId={value.post_id}
+                body={value.body}
+                post_url={value.post_url}
+                metadata={value.metadata}
+                liked={value.liked}
+                likesCount={value.likesCount}
+                messageToolTip={value.messageToolTip}
+                repostsCount = {value.repostsCount}
+                repost_user_id = {value.repost_user_id}
+                reposted_by = {value.reposted_by}
+                callApi={callApi}
+                setCallApi={setCallApi}
                 />
               ))
             ) : (

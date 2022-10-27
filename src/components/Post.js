@@ -40,6 +40,7 @@ export default function Post({
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false)
 
+
   useEffect(() => {
     setLike(liked);
   }, [liked]);
@@ -91,7 +92,8 @@ export default function Post({
       setCallApi(true);
       
     } catch (error) {
-      alert("Você já re-postou esse post!")
+      console.error(error)
+      alert("Algo deu errado!")
     }
     setModalIsOpen(false)
   }
@@ -106,7 +108,7 @@ export default function Post({
     </RepostBox>
     : ""
     }
-    <PostBox>
+    <PostBox margin = {repost_user_id ? "40px" : "0px"}>
       <UserAndLikes>
         <UserImage
           onClick={() => navigate(`/users/${post_userId}`)}
@@ -173,6 +175,7 @@ const Box = styled.div`
   border: 1px solid #333333;
   position: relative;
   width: 611px;
+  
 
   @media (max-width: 850px) {
     width: 100vw;
@@ -207,7 +210,7 @@ const RepostMessage = styled.p`
   margin-left: 10px;
 `
 const PostBox = styled.div`
-  margin-top: 40px;
+  margin-top: ${props => props.margin};
   width: 100%;
   min-height: 276px;
   background-color: #171717;

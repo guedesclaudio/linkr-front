@@ -3,7 +3,7 @@ import { insertPost } from "../services/services";
 import styled from "styled-components";
 import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext.js";
-import { getPostsData } from "../services/services";
+
 
 export default function Publish({callApi, setCallApi}) {
   const [form, setForm] = useState({
