@@ -15,7 +15,7 @@ import { getHashtag, getPostsData } from "../services/services";
 import listPosts from "../helpers/listPosts";
 
 export default function HashtagPosts() {
-  const { posts, userData, setPosts, message, postEdition } =
+  const { posts, userData, setPosts, message, postEdition, page } =
     useContext(UserContext);
   const { hashtag } = useParams();
   const [listPostsId, setListPostsId] = useState([]);
@@ -24,7 +24,7 @@ export default function HashtagPosts() {
 
   async function getPosts() {
     const config = { headers: { Authorization: `Bearer ${userToken}` } };
-    const allPosts = await getPostsData(config);
+    const allPosts = await getPostsData(page, config);
     setPosts(allPosts.data);
   }
 

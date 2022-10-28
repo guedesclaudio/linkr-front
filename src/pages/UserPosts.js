@@ -17,7 +17,7 @@ import { getPostsData, getUserById } from "../services/services";
 
 export default function UserPosts() {
   const { user_id } = useParams();
-  const { posts, message, setMessage, postEdition, userData, setPosts } =
+  const { posts, message, setMessage, postEdition, userData, setPosts, page } =
     useContext(UserContext);
   const [callApi, setCallApi] = useState(true);
   const [userPosts, setUserPosts] = useState([]);
@@ -30,7 +30,7 @@ export default function UserPosts() {
 
   async function getPosts() {
     const config = { headers: { Authorization: `Bearer ${userToken}` } };
-    const allPosts = await getPostsData(config);
+    const allPosts = await getPostsData(page, config);
     setPosts(allPosts.data);
   }
   useEffect(() => {

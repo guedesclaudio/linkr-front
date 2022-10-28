@@ -5,7 +5,7 @@ import { UserContext } from "../contexts/UserContext";
 import { getFollowedList, getPostsData } from "../services/services";
 
 export default function NewPostsButton({ setCallApi }) {
-  const { userData, followedPosts } = useContext(UserContext);
+  const { userData, followedPosts, page } = useContext(UserContext);
   const [newFollowedPosts, setNewFollowedPosts] = useState([]);
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const userToken =
@@ -23,7 +23,7 @@ export default function NewPostsButton({ setCallApi }) {
 
   const getPosts = () => {
     getUsersFollowed();
-    getPostsData(config).then((res) => {
+    getPostsData(page, config).then((res) => {
       const filteredPosts = res.data.filter(
         (post) =>
           post.user_id === userId ||
