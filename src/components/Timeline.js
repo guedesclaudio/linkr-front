@@ -5,6 +5,8 @@ import { getFollowedList, getPostsData } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 import Publish from "./Publish";
 import HashtagList from "./HashtagsList.js";
+import NewPostsButton from "./NewPostsButton";
+import useInterval from "use-interval";
 
 export default function Timeline() {
   const {
@@ -15,6 +17,7 @@ export default function Timeline() {
     setMessage,
     followedPosts,
     setFollowedPosts,
+    postEdition,
   } = useContext(UserContext);
   const [callApi, setCallApi] = useState(true);
   const userToken =
@@ -36,7 +39,9 @@ export default function Timeline() {
           (post) =>
             post.user_id === userId ||
             followed_list.find(
-              (item) => Number(item.followed_id) === Number(post.user_id) || Number(item.followed_id) === Number(post.repost_user_id)
+              (item) =>
+                Number(item.followed_id) === Number(post.user_id) ||
+                Number(item.followed_id) === Number(post.repost_user_id)
             )
         );
         setFollowedPosts(filteredPosts);
@@ -63,13 +68,14 @@ export default function Timeline() {
       getPosts();
       setCallApi(false);
     }
-  }, [callApi]);
+  }, [callApi, postEdition]);
 
   return (
     <MainContainer>
       <TimelineWrapper>
         <Title>timeline</Title>
         <Publish setCallApi={setCallApi}></Publish>
+        <NewPostsButton setCallApi={setCallApi}></NewPostsButton>
         <Container>
           {followedPosts.length > 0 ? (
             followedPosts.map((value, index) => (
