@@ -131,8 +131,7 @@ export default function Body({ body, post_id, post_userId, setCallApi }) {
 
       {userId === post_userId ? (
         <IconContext.Provider
-          value={{ color: "white", className: "class-modification-icons" }}
-        >
+          value={{ color: "white", className: "class-modification-icons" }}>
           <ModificationIcons>
             <BsFillPencilFill
               onClick={() => {

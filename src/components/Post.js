@@ -7,7 +7,7 @@ import { BiRepost } from "react-icons/bi";
 import { AiOutlineComment } from "react-icons/ai";
 import { IconContext } from "react-icons";
 import { useEffect, useState, useContext } from "react";
-import { sendLikeOrDeslike, postRepost } from "../services/services";
+import { sendLikeOrDeslike, postRepost, getComments } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
@@ -40,10 +40,18 @@ export default function Post({
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const msgToolTipId = `${postId}`;
+  const [commentIsOpen, setCommentIsOpen] = useState(false);
+  const [commentsList, setCommentsList] = useState([]);
 
   useEffect(() => {
     setLike(liked);
   }, [liked]);
+
+  useEffect(() => {
+    getComments(userData.token, postId).then((response) => {
+      setCommentsList(response.data);
+    });
+  }, []);
 
   async function likeOrDeslike(value) {
     if (reposted_by) {
@@ -87,6 +95,17 @@ export default function Post({
     setModalIsOpen(true);
   }
 
+  async function comments() {
+    if (!commentIsOpen) {
+      setCommentIsOpen(true);
+      const response = await getComments(userData.token, postId);
+      setCommentsList(response.data);
+
+    } else {
+      setCommentIsOpen(false);
+    }
+  }
+
   async function repost() {
     try {
       await postRepost({ config, postId });
@@ -125,6 +144,7 @@ export default function Post({
       ) : (
         ""
       )}
+      <Div commentIsOpen={commentIsOpen}>
       <PostBox margin={repost_user_id ? "40px" : "0px"}>
         <UserAndLikes>
           <UserImage onClick={goUserPage} src={picture_url} />
@@ -142,8 +162,8 @@ export default function Post({
               </LikesCount>
             </Likes>
             <CommentCount>
-              <AiOutlineComment color={"white"} />
-              <Count>0 comments</Count>
+              <AiOutlineComment color={"white"} onClick={comments} />
+              <Count>{commentsList.length} {commentsList.length === 1 ? "comment" : "comments"}</Count>
             </CommentCount>
             <RepostCount>
               <BiRepost color={"white"} onClick={openModalRepost} />
@@ -172,7 +192,6 @@ export default function Post({
           callApi={callApi}
           setCallApi={setCallApi}
         />
-        <Comments />
         {modalIsOpen ? (
           <Modal isOpen={modalIsOpen} style={customStyles}>
             <ModalTitle>Do you want to re-post this link?</ModalTitle>
@@ -185,6 +204,14 @@ export default function Post({
           ""
         )}
       </PostBox>
+      </Div>
+      {commentIsOpen ? (          
+          <Comments 
+            commentsList={commentsList}
+            post_id={postId}
+            setCommentsList={setCommentsList} />
+      ) : ('')
+      }
     </Box>
   );
 }
@@ -193,11 +220,17 @@ const Box = styled.div`
   border: 1px solid #333333;
   position: relative;
   width: 611px;
+  margin-bottom: 20px;
 
   @media (max-width: 850px) {
     width: 100vw;
     min-height: 232px;
   }
+`;
+const Div = styled.div`
+  background-color: ${props => props.commentIsOpen ? '#1E1E1E' : ''};
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
 `;
 const RepostBox = styled.div`
   background-color: #1e1e1e;
@@ -232,10 +265,10 @@ const PostBox = styled.div`
   min-height: 276px;
   background-color: #171717;
   border-radius: 16px;
-  margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
   align-items: top;
+  z-index: 1;
 
   @media (max-width: 850px) {
     border-radius: 0;
