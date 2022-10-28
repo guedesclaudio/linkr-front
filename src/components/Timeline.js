@@ -35,7 +35,7 @@ export default function Timeline() {
   };
 
   const getPosts = () => {
-    setPage(page + 1)
+    
     
     getPostsData(page, config)
       .then((res) => {
@@ -58,6 +58,7 @@ export default function Timeline() {
           setHasMore(false)
         }
         setPosts(res.data);
+        setPage(page + 1)
       })
       .catch((err) => {
         console.log(err);
@@ -91,13 +92,15 @@ export default function Timeline() {
             dataLength={followedPosts.length}
             next={callPage}
             hasMore={hasMore}
-            loader={followedPosts.length < page * 10 ?
-               <h1></h1> : 
+            loader={ followedPosts.length < (page - 1) * 10 ? 
+              <ScrollMessage>
+                  <p>You don't have any more posts</p>
+               </ScrollMessage> :
                <ScrollMessage>
                   <p>Loading more posts...</p>
                   <ReactLoading type="spin" color="#fff" width={30}/>
                </ScrollMessage>}
-            endMessage={<h1>Yay! You have seen it all</h1>}
+            endMessage={!hasMore ? <h1>Yay! You have seen it all</h1> : ""}
           >
           {followedPosts.length > 0 ? (
             followedPosts.map((value, index) => (
