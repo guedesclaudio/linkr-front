@@ -79,8 +79,6 @@ export default function Timeline() {
       getUsersFollowed();
       getPosts();
       setCallApi(false);
-      console.log(followedPosts.length)
-      console.log(page)
     }
   }, [callApi, postEdition]);
 
