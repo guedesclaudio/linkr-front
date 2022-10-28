@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
 import { getIfIsPostsAuthor } from "../services/services";
 import { UserContext } from "../contexts/UserContext.js";
@@ -34,8 +34,14 @@ export default function Comment({
                 <CommentContent>
                     <UserInfo>
                         <UserName>{username}</UserName>
-                        <Circle />
-                        <Label>{authorLabel}</Label>
+                        {authorLabel !== '' ?
+                        <>
+                            <Circle />
+                            <Label>{authorLabel}</Label>
+                        </>
+                        : ''
+                        }
+                        
                     </UserInfo>
                     <Text>{comment}</Text>
                 </CommentContent>

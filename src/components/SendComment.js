@@ -5,7 +5,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext.js";
 import { insertComment, getComments } from "../services/services.js";
 
-export default function SendComment({ post_id, setCommentsList }) {
+export default function SendComment({ post_id, commentsList, setCommentsList }) {
     const { userData } = useContext(UserContext);
     const [comment, setComment] = useState({comment: ""});
 

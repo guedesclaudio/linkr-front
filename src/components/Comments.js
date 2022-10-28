@@ -21,6 +21,7 @@ export default function Comments({ commentsList, post_id, setCommentsList }) {
             : ('')}
             <SendComment 
                 post_id={post_id}
+                commentsList={commentsList}
                 setCommentsList={setCommentsList} />
         </Wrapper>
     )

@@ -36,21 +36,22 @@ const customStyles = {
 
 export default function Body({ body, post_id, post_userId, setCallApi }) {
   const navigate = useNavigate();
-  const { userData } = useContext(UserContext);
+  const { userData, postEdition, setPostEdition } = useContext(UserContext);
   const [isEditable, setIsEditable] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [editIsClicked, setIsClicked] = useState(false);
   const userId = JSON.parse(localStorage.getItem("user")).user_id;
-  const userToken = JSON.parse(localStorage.getItem("user")).token || userData.token;
+  const userToken =
+    JSON.parse(localStorage.getItem("user")).token || userData.token;
   const [send, setSend] = useState({ body });
   let newBody = body;
   const inputRef = useRef();
 
   useEffect(() => {
     if (editIsClicked) {
-        inputRef.current.focus();
+      inputRef.current.focus();
     }
   }, [editIsClicked]);
 
@@ -65,7 +66,6 @@ export default function Body({ body, post_id, post_userId, setCallApi }) {
     if (e.key === "Escape") {
       setSend({ body: newBody });
       setIsEditable(false);
-
     } else if (e.key === "Enter") {
       setIsDisabled(true);
 
@@ -76,7 +76,7 @@ export default function Body({ body, post_id, post_userId, setCallApi }) {
         newBody = send.body;
         setIsEditable(false);
         setIsDisabled(false);
-
+        setPostEdition(!postEdition);
       } catch (error) {
         alert("Unable to save changes");
         setIsDisabled(false);
@@ -94,7 +94,7 @@ export default function Body({ body, post_id, post_userId, setCallApi }) {
       setIsOpen(false);
       setIsLoading(false);
       setCallApi(true);
-
+      setPostEdition(!postEdition);
     } catch (error) {
       setIsOpen(false);
       setIsLoading(false);
@@ -138,6 +138,7 @@ export default function Body({ body, post_id, post_userId, setCallApi }) {
                 setIsClicked(!editIsClicked);
                 setSend({ body: newBody });
                 setIsEditable(!isEditable);
+                setPostEdition(!postEdition);
               }}
             />
             <FaTrashAlt onClick={() => setIsOpen(true)} />
@@ -155,7 +156,7 @@ export default function Body({ body, post_id, post_userId, setCallApi }) {
               navigate(`/hashtag/${tag.slice(1).toLowerCase()}`)
             }
           >
-            { newBody }
+            {newBody}
           </ReactTagify>
         </Text>
       ) : (
@@ -243,6 +244,6 @@ const Cancel = styled.button`
   cursor: pointer;
 `;
 const Submit = styled(Cancel)`
-    background-color: #1877f2;
-    color: white;
+  background-color: #1877f2;
+  color: white;
 `;

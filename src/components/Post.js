@@ -13,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 import { customStyles } from "../styles/customStyles.js";
 
-
 export default function Post({
   post_userId,
   username,
@@ -35,12 +34,12 @@ export default function Post({
 }) {
   const [like, setLike] = useState(liked);
   const heartColor = like ? "red" : "white";
-  const { userData } = useContext(UserContext);
+  const { userData, postEdition, setPostEdition } = useContext(UserContext);
   const config = { headers: { Authorization: `Bearer ${userData.token}` } };
   const userId = JSON.parse(localStorage.getItem("user")).user_id;
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const msgToolTipId = repost_user_id ? `${repost_id}` : `${postId}`;
+  const msgToolTipId = `${postId}`;
   const [commentIsOpen, setCommentIsOpen] = useState(false);
   const [commentsList, setCommentsList] = useState([]);
 
@@ -48,10 +47,16 @@ export default function Post({
     setLike(liked);
   }, [liked]);
 
+  useEffect(() => {
+    getComments(userData.token, postId).then((response) => {
+      setCommentsList(response.data);
+    });
+  }, []);
+
   async function likeOrDeslike(value) {
     if (reposted_by) {
-      alert("Não é possível curtir um re-post")
-      return
+      alert("Não é possível curtir um re-post");
+      return;
     }
     if (value) {
       setLike(true);
@@ -63,6 +68,7 @@ export default function Post({
 
       getPosts();
       setCallApi(true);
+      setPostEdition(!postEdition);
       return;
     }
     setLike(false);
@@ -73,19 +79,20 @@ export default function Post({
     }
     setCallApi(true);
     getPosts();
+    setPostEdition(!postEdition);
   }
 
   function openModalRepost() {
     if (reposted_by) {
-      alert("Não é possível re-postar um re-post")
-      return
+      alert("Não é possível re-postar um re-post");
+      return;
     }
-    
+
     if (userId === post_userId) {
-      alert("Não é possível re-postar o próprio post")
-      return
+      alert("Não é possível re-postar o próprio post");
+      return;
     }
-    setModalIsOpen(true)
+    setModalIsOpen(true);
   }
 
   async function comments() {
@@ -101,34 +108,46 @@ export default function Post({
 
   async function repost() {
     try {
-      await postRepost({config, postId})
+      await postRepost({ config, postId });
       getPosts();
       setCallApi(true);
-      
     } catch (error) {
-      console.error(error)
-      alert("Algo deu errado!")
+      console.error(error);
+      alert("Algo deu errado!");
     }
-    setModalIsOpen(false)
+    setModalIsOpen(false);
   }
 
+  function goUserPage() {
+    localStorage.setItem(
+      "userPage",
+      JSON.stringify({
+        name: username,
+        userId: post_userId,
+        userImage: picture_url,
+      })
+    );
+    navigate(`/users/${post_userId}`);
+  }
 
   return (
     <Box>
-      {repost_user_id ? 
-      <RepostBox>
-        <BiRepost className = {"icon"}/>
-        <RepostMessage>{userId === repost_user_id ? "Re-posted by you" : `Re-posted by ${reposted_by}`}</RepostMessage> 
-      </RepostBox>
-      : ""
-      }
-      <Div>
-      <PostBox margin = {repost_user_id ? "40px" : "0px"}>
+      {repost_user_id ? (
+        <RepostBox>
+          <BiRepost className={"icon"} />
+          <RepostMessage>
+            {userId === repost_user_id
+              ? "Re-posted by you"
+              : `Re-posted by ${reposted_by}`}
+          </RepostMessage>
+        </RepostBox>
+      ) : (
+        ""
+      )}
+      <Div commentIsOpen={commentIsOpen}>
+      <PostBox margin={repost_user_id ? "40px" : "0px"}>
         <UserAndLikes>
-          <UserImage
-            onClick={() => navigate(`/users/${post_userId}`)}
-            src={picture_url}
-          />
+          <UserImage onClick={goUserPage} src={picture_url} />
           <IconContext.Provider
             value={{ color: `${heartColor}`, className: "class-like" }}
           >
@@ -147,8 +166,10 @@ export default function Post({
               <Count>{commentsList.length} {commentsList.length === 1 ? "comment" : "comments"}</Count>
             </CommentCount>
             <RepostCount>
-              <BiRepost color = {"white"} onClick = {openModalRepost}/>
-              <Count>{repostsCount} {repostsCount === 1 ? "re-post" : "re-posts"}</Count>
+              <BiRepost color={"white"} onClick={openModalRepost} />
+              <Count>
+                {repostsCount} {repostsCount === 1 ? "re-post" : "re-posts"}
+              </Count>
             </RepostCount>
           </IconContext.Provider>
           <ReactTooltip
@@ -162,6 +183,7 @@ export default function Post({
         </UserAndLikes>
         <PostContents
           username={username}
+          picture_url={picture_url}
           body={body}
           post_url={post_url}
           metadata={metadata}
@@ -170,22 +192,18 @@ export default function Post({
           callApi={callApi}
           setCallApi={setCallApi}
         />
-        {modalIsOpen ? 
+        {modalIsOpen ? (
           <Modal isOpen={modalIsOpen} style={customStyles}>
-              <ModalTitle>
-                Do you want to re-post this link?
-              </ModalTitle>
-              <ModalButtons>
-                <Cancel onClick={() => setModalIsOpen(false)}>No, go back</Cancel>
-                <Submit onClick={repost}>Yes, share!</Submit>
-              </ModalButtons>
-          </Modal> : ""
-        }
+            <ModalTitle>Do you want to re-post this link?</ModalTitle>
+            <ModalButtons>
+              <Cancel onClick={() => setModalIsOpen(false)}>No, go back</Cancel>
+              <Submit onClick={repost}>Yes, share!</Submit>
+            </ModalButtons>
+          </Modal>
+        ) : (
+          ""
+        )}
       </PostBox>
-      {commentIsOpen ?
-        <BackgroundComments />
-        : ''
-      }
       </Div>
       {commentIsOpen ? (          
           <Comments 
@@ -210,10 +228,12 @@ const Box = styled.div`
   }
 `;
 const Div = styled.div`
-  position: relative;
+  background-color: ${props => props.commentIsOpen ? '#1E1E1E' : ''};
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
 `;
 const RepostBox = styled.div`
-  background-color: #1E1E1E;
+  background-color: #1e1e1e;
   border-radius: 16px;
   height: 100px;
   position: absolute;
@@ -231,16 +251,16 @@ const RepostBox = styled.div`
     color: white;
     font-size: 22px;
   }
-`
+`;
 const RepostMessage = styled.p`
-  font-family: 'Lato';
+  font-family: "Lato";
   font-weight: 400;
   font-size: 11px;
-  color: #FFFFFF;
+  color: #ffffff;
   margin-left: 10px;
-`
+`;
 const PostBox = styled.div`
-  margin-top: ${props => props.margin};
+  margin-top: ${(props) => props.margin};
   width: 100%;
   min-height: 276px;
   background-color: #171717;
@@ -253,15 +273,6 @@ const PostBox = styled.div`
   @media (max-width: 850px) {
     border-radius: 0;
   }
-`;
-const BackgroundComments = styled.div`
-  width: 100%;
-  height: 20px;
-  background-color: #1E1E1E;
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-  z-index: 0;
 `;
 const UserImage = styled.img`
   width: 50px;
@@ -304,9 +315,9 @@ const CommentCount = styled.div`
 `;
 const RepostCount = styled(CommentCount)`
   margin-bottom: 20px;
-  color:white;
-`
-const Count = styled(LikesCount)``
+  color: white;
+`;
+const Count = styled(LikesCount)``;
 
 ///////////// compartilhar
 const ModalTitle = styled.div`
@@ -342,6 +353,6 @@ const Cancel = styled.button`
   cursor: pointer;
 `;
 const Submit = styled(Cancel)`
-    background-color: #1877f2;
-    color: white;
+  background-color: #1877f2;
+  color: white;
 `;
