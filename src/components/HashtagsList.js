@@ -6,7 +6,7 @@ import { UserContext } from "../contexts/UserContext";
 
 export default function HashtagsList() {
   const [hashtags, setHashtags] = useState([]);
-  const { userData } = useContext(UserContext);
+  const { userData, posts } = useContext(UserContext);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
@@ -20,7 +20,7 @@ export default function HashtagsList() {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [posts]);
 
   return (
     <Container>
