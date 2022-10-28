@@ -3,9 +3,9 @@ import { IconContext } from "react-icons";
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext.js";
-import { insertComment } from "../services/services.js";
+import { insertComment, getComments } from "../services/services.js";
 
-export default function SendComment({ post_id }) {
+export default function SendComment({ post_id, setCommentsList }) {
     const { userData } = useContext(UserContext);
     const [comment, setComment] = useState({comment: ""});
 
@@ -19,6 +19,8 @@ export default function SendComment({ post_id }) {
         try {
             await insertComment(comment, userData.token, post_id);
             setComment({comment: ""});
+            const response = await getComments(userData.token, post_id);
+            setCommentsList(response.data);
 
         } catch (error) {
             console.log(error);
@@ -38,6 +40,7 @@ export default function SendComment({ post_id }) {
                     name="comment"
                     value={comment.comment}
                     onChange={handleComment}
+                    autoComplete="off"
                     />
                 <IconContext.Provider value={{ color: "white", className: "class-send-icon" }}>
                     <SendIcon>
