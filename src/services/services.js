@@ -100,6 +100,34 @@ function postRepost({ config, postId }) {
   return axios.post(`${baseUrlTest}/reposts/${postId}`, {}, config);
 }
 
+function insertComment(body, token, post_id) {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      PostId: post_id,
+    },
+  };
+  return axios.post(`${baseUrlTest}/comments`, body, config);
+}
+
+function getComments(token, post_id) {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+  };
+  return axios.get(`${baseUrlTest}/comments/${post_id}`, config);
+}
+
+function getIfIsPostsAuthor(token, post_id, author_id, comment_id) {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+  };
+  return axios.get(`${baseUrlTest}/comments/${post_id}/${author_id}/${comment_id}`, config);
+}
+
 export {
   getPostsData,
   sendLikeOrDeslike,
@@ -117,4 +145,7 @@ export {
   getFollowedList,
   getUserById,
   postRepost,
+  insertComment,
+  getComments,
+  getIfIsPostsAuthor
 };

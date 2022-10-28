@@ -1,36 +1,41 @@
 import styled from "styled-components";
 import Comment from "./Comment.js";
+import SendComment from "./SendComment.js";
 
-export default function Comments() {
-    const commentsPost = [
-        {
-            user_image: "",
-            username: "João Avatares",
-            comment: "Adorei esse post, ajuda muito a usar Material UI com React!",
-            following: true,
-            isTheAuthor: false
-        }
-    ];
-
+export default function Comments({ commentsList, post_id, setCommentsList }) {
     return (
         <Wrapper>
-            {commentsPost.length > 0 ? (
-                commentsPost.map((comment, index) => (
+            {commentsList.length > 0 ? (
+                commentsList.map((comment) => (
                     <Comment 
-                        key={index}
+                        key={comment.id}
+                        comment_id={comment.id}
                         username={comment.username}
-                        user_image={comment.user_image}
-                        following={comment.following}
-                        isTheAuthor={comment.isTheAuthor}
-                        comment={comment.comment}
+                        picture_url={comment.picture_url}
+                        comment={comment.body}
+                        user_id={comment.user_id}
+                        post_id={post_id}
                     />
                 ))
             )
             : ('')}
+            <SendComment 
+                post_id={post_id}
+                commentsList={commentsList}
+                setCommentsList={setCommentsList} />
         </Wrapper>
     )
 }
 
 const Wrapper = styled.div`
+    width: 100%;
+    min-height: 83px;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    background-color: #1E1E1E;
 
+    @media (max-width: 850px) {
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
 `;

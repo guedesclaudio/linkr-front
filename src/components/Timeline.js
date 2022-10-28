@@ -5,8 +5,6 @@ import { getFollowedList, getPostsData } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 import Publish from "./Publish";
 import HashtagList from "./HashtagsList.js";
-import InfiniteScroll from "react-infinite-scroll-component";
-import ReactLoading from "react-loading";
 
 export default function Timeline() {
   const {
@@ -17,6 +15,7 @@ export default function Timeline() {
     setMessage,
     followedPosts,
     setFollowedPosts,
+    postEdition,
   } = useContext(UserContext);
 
   const [callApi, setCallApi] = useState(true);
@@ -43,7 +42,9 @@ export default function Timeline() {
           (post) =>
             post.user_id === userId ||
             followed_list.find(
-              (item) => Number(item.followed_id) === Number(post.user_id) || Number(item.followed_id) === Number(post.repost_user_id)
+              (item) =>
+                Number(item.followed_id) === Number(post.user_id) ||
+                Number(item.followed_id) === Number(post.repost_user_id)
             )
         );
         setFollowedPosts(filteredPosts);
@@ -76,7 +77,7 @@ export default function Timeline() {
       console.log(followedPosts.length)
       console.log(page)
     }
-  }, [callApi]);
+  }, [callApi, postEdition]);
 
   function callPage() {
     setTimeout(() => setCallApi(true), 500)
@@ -87,6 +88,7 @@ export default function Timeline() {
       <TimelineWrapper>
         <Title>timeline</Title>
         <Publish setCallApi={setCallApi}></Publish>
+        <NewPostsButton setCallApi={setCallApi}></NewPostsButton>
         <Container>
         <InfiniteScroll
             dataLength={followedPosts.length}
