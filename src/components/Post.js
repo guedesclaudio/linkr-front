@@ -102,73 +102,74 @@ export default function Post({
 
   return (
     <Box>
-    {repost_user_id ? 
-    <RepostBox>
-      <BiRepost className = {"icon"}/>
-      <RepostMessage>{userId === repost_user_id ? "Re-posted by you" : `Re-posted by ${reposted_by}`}</RepostMessage> 
-    </RepostBox>
-    : ""
-    }
-    <PostBox margin = {repost_user_id ? "40px" : "0px"}>
-      <UserAndLikes>
-        <UserImage
-          onClick={() => navigate(`/users/${post_userId}`)}
-          src={picture_url}
-        />
-        <IconContext.Provider
-          value={{ color: `${heartColor}`, className: "class-like" }}
-        >
-          <Likes>
-            {like ? (
-              <IoIosHeart onClick={() => likeOrDeslike(false)} />
-            ) : (
-              <IoIosHeartEmpty onClick={() => likeOrDeslike(true)} />
-            )}
-            <LikesCount data-tip data-for={msgToolTipId}>
-              {likesCount} {likesCount === 1 ? "like" : "likes"}
-            </LikesCount>
-          </Likes>
-          <CommentCount>
-            <AiOutlineComment color={"white"} />
-            <Count>0 comments</Count>
-          </CommentCount>
-          <RepostCount>
-            <BiRepost color = {"white"} onClick = {openModalRepost}/>
-            <Count>{repostsCount} {repostsCount === 1 ? "re-post" : "re-posts"}</Count>
-          </RepostCount>
-        </IconContext.Provider>
-        <ReactTooltip
-          id={msgToolTipId}
-          place="bottom"
-          effect="float"
-          type="light"
-        >
-          <Message>{messageToolTip}</Message>
-        </ReactTooltip>
-      </UserAndLikes>
-      <PostContents
-        username={username}
-        body={body}
-        post_url={post_url}
-        metadata={metadata}
-        post_id={postId}
-        post_userId={post_userId}
-        callApi={callApi}
-        setCallApi={setCallApi}
-      />
-      <Comments />
-      {modalIsOpen ? 
-        <Modal isOpen={modalIsOpen} style={customStyles}>
-            <ModalTitle>
-              Do you want to re-post this link?
-            </ModalTitle>
-            <ModalButtons>
-              <Cancel onClick={() => setModalIsOpen(false)}>No, go back</Cancel>
-              <Submit onClick={repost}>Yes, share!</Submit>
-            </ModalButtons>
-        </Modal> : ""
+      {repost_user_id ? 
+      <RepostBox>
+        <BiRepost className = {"icon"}/>
+        <RepostMessage>{userId === repost_user_id ? "Re-posted by you" : `Re-posted by ${reposted_by}`}</RepostMessage> 
+      </RepostBox>
+      : ""
       }
-    </PostBox>
+      <PostBox margin = {repost_user_id ? "40px" : "0px"}>
+        <UserAndLikes>
+          <UserImage
+            onClick={() => navigate(`/users/${post_userId}`)}
+            src={picture_url}
+          />
+          <IconContext.Provider
+            value={{ color: `${heartColor}`, className: "class-like" }}
+          >
+            <Likes>
+              {like ? (
+                <IoIosHeart onClick={() => likeOrDeslike(false)} />
+              ) : (
+                <IoIosHeartEmpty onClick={() => likeOrDeslike(true)} />
+              )}
+              <LikesCount data-tip data-for={msgToolTipId}>
+                {likesCount} {likesCount === 1 ? "like" : "likes"}
+              </LikesCount>
+            </Likes>
+            <CommentCount>
+              <AiOutlineComment color={"white"} />
+              <Count>0 comments</Count>
+            </CommentCount>
+            <RepostCount>
+              <BiRepost color = {"white"} onClick = {openModalRepost}/>
+              <Count>{repostsCount} {repostsCount === 1 ? "re-post" : "re-posts"}</Count>
+            </RepostCount>
+          </IconContext.Provider>
+          <ReactTooltip
+            id={msgToolTipId}
+            place="bottom"
+            effect="float"
+            type="light"
+          >
+            <Message>{messageToolTip}</Message>
+          </ReactTooltip>
+        </UserAndLikes>
+        <PostContents
+          username={username}
+          body={body}
+          post_url={post_url}
+          metadata={metadata}
+          post_id={postId}
+          post_userId={post_userId}
+          callApi={callApi}
+          setCallApi={setCallApi}
+        />
+        {modalIsOpen ? 
+          <Modal isOpen={modalIsOpen} style={customStyles}>
+              <ModalTitle>
+                Do you want to re-post this link?
+              </ModalTitle>
+              <ModalButtons>
+                <Cancel onClick={() => setModalIsOpen(false)}>No, go back</Cancel>
+                <Submit onClick={repost}>Yes, share!</Submit>
+              </ModalButtons>
+          </Modal> : ""
+        }
+      </PostBox>
+      <BackgroundComments />
+      <Comments post_id={postId} />
     </Box>
   );
 }
@@ -177,7 +178,7 @@ const Box = styled.div`
   border: 1px solid #333333;
   position: relative;
   width: 611px;
-  
+  margin-bottom: 20px;
 
   @media (max-width: 850px) {
     width: 100vw;
@@ -217,14 +218,24 @@ const PostBox = styled.div`
   min-height: 276px;
   background-color: #171717;
   border-radius: 16px;
-  margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
   align-items: top;
+  position: relative;
+  z-index: 1;
 
   @media (max-width: 850px) {
     border-radius: 0;
   }
+`;
+const BackgroundComments = styled.div`
+  width: 100%;
+  height: 20px;
+  background-color: #1E1E1E;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
 `;
 const UserImage = styled.img`
   width: 50px;

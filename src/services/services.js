@@ -100,6 +100,16 @@ function postRepost({ config, postId }) {
   return axios.post(`${baseUrlTest}/reposts/${postId}`, {}, config);
 }
 
+function insertComment(body, token, post_id) {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      PostId: post_id,
+    },
+  };
+  return axios.post(`${baseUrlTest}/comments`, body, config);
+}
+
 export {
   getPostsData,
   sendLikeOrDeslike,
@@ -117,4 +127,5 @@ export {
   getFollowedList,
   getUserById,
   postRepost,
+  insertComment
 };
