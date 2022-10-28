@@ -5,6 +5,8 @@ import { getFollowedList, getPostsData } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 import Publish from "./Publish";
 import HashtagList from "./HashtagsList.js";
+import InfiniteScroll from "react-infinite-scroll-component";
+import ReactLoading from "react-loading";
 
 export default function Timeline() {
   const {
@@ -16,7 +18,10 @@ export default function Timeline() {
     followedPosts,
     setFollowedPosts,
   } = useContext(UserContext);
+
   const [callApi, setCallApi] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
   const userToken =
     JSON.parse(localStorage.getItem("user")).token || userData.token;
   const config = { headers: { Authorization: `Bearer ${userToken}` } };
@@ -30,7 +35,9 @@ export default function Timeline() {
   };
 
   const getPosts = () => {
-    getPostsData(config)
+    setPage(page + 1)
+    
+    getPostsData(page, config)
       .then((res) => {
         const filteredPosts = res.data.filter(
           (post) =>
@@ -42,10 +49,13 @@ export default function Timeline() {
         setFollowedPosts(filteredPosts);
         if (res.data.length === 0) {
           setMessage("There are no posts yet");
+          setHasMore(false)
         } else if (filteredPosts.length === 0 && followed_list.length === 0) {
           setMessage("You don't follow anyone yet. Search for new friends!");
         } else if (filteredPosts.length === 0 && followed_list.length !== 0) {
           setMessage("No posts found from your friends");
+        } else if (filteredPosts < page * 10) {
+          setHasMore(false)
         }
         setPosts(res.data);
       })
@@ -62,8 +72,14 @@ export default function Timeline() {
       getUsersFollowed();
       getPosts();
       setCallApi(false);
+      console.log(followedPosts.length)
+      console.log(page)
     }
   }, [callApi]);
+
+  function callPage() {
+    setTimeout(() => setCallApi(true), 500)
+  }
 
   return (
     <MainContainer>
@@ -71,6 +87,18 @@ export default function Timeline() {
         <Title>timeline</Title>
         <Publish setCallApi={setCallApi}></Publish>
         <Container>
+        <InfiniteScroll
+            dataLength={followedPosts.length}
+            next={callPage}
+            hasMore={hasMore}
+            loader={followedPosts.length < page * 10 ?
+               <h1></h1> : 
+               <ScrollMessage>
+                  <p>Loading more posts...</p>
+                  <ReactLoading type="spin" color="#fff" width={30}/>
+               </ScrollMessage>}
+            endMessage={<h1>Yay! You have seen it all</h1>}
+          >
           {followedPosts.length > 0 ? (
             followedPosts.map((value, index) => (
               <Post
@@ -97,13 +125,30 @@ export default function Timeline() {
           ) : (
             <LoadMessage>{message}</LoadMessage>
           )}
+          </InfiniteScroll>
         </Container>
       </TimelineWrapper>
       <HashtagList />
     </MainContainer>
   );
 }
+const ScrollMessage = styled.div`
+  text-align: center; 
+  width: 240px;
+  margin: 40px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  flex-direction: column;
 
+  && p {
+    font-family: 'Lato';
+    font-weight: 400;
+    font-size: 22px;
+    color: #6D6D6D;
+    margin-bottom: 16px;
+  }
+`
 const MainContainer = styled.nav`
   display: flex;
   justify-content: center;

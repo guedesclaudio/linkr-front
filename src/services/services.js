@@ -3,8 +3,8 @@ import axios from "axios";
 const baseUrlTest = "http://localhost:5000"; //url de teste
 const baseUrlProduction = "https://linkr-backend-api.herokuapp.com"; //url de producao
 
-function getPostsData(config) {
-  return axios.get(`${baseUrlTest}/timeline`, config); //pegar config
+function getPostsData(pageValue, config) {
+  return axios.get(`${baseUrlTest}/timeline?page=${pageValue}`, config); //pegar config
 }
 
 function sendLikeOrDeslike({ postId, likeValue, config }) {
