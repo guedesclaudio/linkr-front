@@ -26,7 +26,6 @@ export default function HashtagPosts() {
     const config = { headers: { Authorization: `Bearer ${userToken}` } };
     const allPosts = await getPostsData(config);
     setPosts(allPosts.data);
-    console.log(allPosts.data);
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,6 +86,9 @@ export default function HashtagPosts() {
                   liked={value.liked}
                   likesCount={value.likesCount}
                   messageToolTip={value.messageToolTip}
+                  repostsCount={value.repostsCount}
+                  repost_user_id={value.repost_user_id}
+                  reposted_by={value.reposted_by}
                   callApi={callApi}
                   setCallApi={setCallApi}
                   getPosts={getPosts}
