@@ -8,7 +8,7 @@ const UserStorage = ({ children }) => {
   const [followedPosts, setFollowedPosts] = useState([]);
   const [message, setMessage] = useState("Loading...");
   const [userId, setUserId] = useState();
-
+  const [postEdition, setPostEdition] = useState(false);
   return (
     <UserContext.Provider
       value={{
@@ -22,6 +22,8 @@ const UserStorage = ({ children }) => {
         setMessage,
         userId,
         setUserId,
+        postEdition,
+        setPostEdition,
       }}
     >
       {children}

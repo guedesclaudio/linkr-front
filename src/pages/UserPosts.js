@@ -13,47 +13,64 @@ import {
 } from "../components/Timeline";
 import { UserContext } from "../contexts/UserContext";
 import checkFollow from "../helpers/checkFollow";
-import { getUserById } from "../services/services";
+import { getPostsData, getUserById } from "../services/services";
 
 export default function UserPosts() {
   const { user_id } = useParams();
-  const { posts, message, setMessage } = useContext(UserContext);
-  const [callApi, setCallApi] = useState(0);
+  const { posts, message, setMessage, postEdition, userData, setPosts } =
+    useContext(UserContext);
+  const [callApi, setCallApi] = useState(true);
   const [userPosts, setUserPosts] = useState([]);
   const [existingUsername, setExistingUsername] = useState("");
   const [isFollowed, setIsFollowed] = useState(null);
-  const userDescription = JSON.parse(localStorage.getItem("userPage"))
-  const {userId} = userDescription
+  const userDescription = JSON.parse(localStorage.getItem("userPage"));
+  const { userId } = userDescription;
+  const userToken =
+    JSON.parse(localStorage.getItem("user")).token || userData.token;
 
+  async function getPosts() {
+    const config = { headers: { Authorization: `Bearer ${userToken}` } };
+    const allPosts = await getPostsData(config);
+    setPosts(allPosts.data);
+  }
   useEffect(() => {
-    const response = checkFollow(userId);
-    response.then((res) => {
-      setIsFollowed(res);
-    });
-    const request = getUserById(userId);
-    request.then((res) => {
-      if (res.data.length !== 0) {
-        setExistingUsername(res.data[0].username);
+    getPosts();
+  }, [postEdition]);
+  useEffect(() => {
+    try {
+      const response = checkFollow(userId);
+      response.then((res) => {
+        setIsFollowed(res);
+      });
+      const request = getUserById(userId);
+      request.then((res) => {
+        if (res.data.length !== 0) {
+          setExistingUsername(res.data[0].username);
+        }
+      });
+      setUserPosts(
+        posts.filter((post) => {
+          if (post.user_id !== Number(userId) && post.repost_user_id === null) {
+            return false;
+          }
+          if (
+            post.repost_user_id !== null &&
+            post.repost_user_id !== Number(userId)
+          ) {
+            return false;
+          }
+          return post;
+        })
+      );
+      if (!existingUsername) {
+        setMessage("User does not exist!");
+      } else if (userPosts.length === 0) {
+        setMessage("User does not have posts yet!");
       }
-    });
-    
-    setUserPosts(
-      posts.filter((post) => {
-        if (post.user_id !== Number(userId) && post.repost_user_id === null) {
-          return false
-        }
-        if (post.repost_user_id !== null && post.repost_user_id !== Number(userId)) {
-          return false
-        }
-        return post;
-      })
-    );
-    if (!existingUsername) {
-      setMessage("User does not exist!");
-    } else if (userPosts.length === 0) {
-      setMessage("User does not have posts yet!");
+    } catch (error) {
+      console.log(error);
     }
-  }, [callApi, existingUsername, user_id]);
+  }, [posts]);
 
   return (
     <>
@@ -92,22 +109,22 @@ export default function UserPosts() {
               userPosts.map((value, index) => (
                 <Post
                   key={index}
-                post_userId={value.user_id}
-                username={value.owner_post}
-                picture_url={value.picture_url}
-                postId={value.post_id}
-                body={value.body}
-                post_url={value.post_url}
-                metadata={value.metadata}
-                liked={value.liked}
-                likesCount={value.likesCount}
-                messageToolTip={value.messageToolTip}
-                repostsCount = {value.repostsCount}
-                repost_user_id = {value.repost_user_id}
-                reposted_by = {value.reposted_by}
-                callApi={callApi}
-                setCallApi={setCallApi}
-                
+                  post_userId={value.user_id}
+                  username={value.owner_post}
+                  picture_url={value.picture_url}
+                  postId={value.post_id}
+                  body={value.body}
+                  post_url={value.post_url}
+                  metadata={value.metadata}
+                  liked={value.liked}
+                  likesCount={value.likesCount}
+                  messageToolTip={value.messageToolTip}
+                  repostsCount={value.repostsCount}
+                  repost_user_id={value.repost_user_id}
+                  reposted_by={value.reposted_by}
+                  callApi={callApi}
+                  setCallApi={setCallApi}
+                  getPosts={getPosts}
                 />
               ))
             ) : (

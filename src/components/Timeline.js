@@ -28,7 +28,7 @@ export default function Timeline() {
       followed_list = res.data;
     });
   };
-  
+
   const getPosts = () => {
     getPostsData(config)
       .then((res) => {
@@ -85,10 +85,10 @@ export default function Timeline() {
                 liked={value.liked}
                 likesCount={value.likesCount}
                 messageToolTip={value.messageToolTip}
-                repostsCount = {value.repostsCount}
-                repost_id = {value.repost_id}
-                repost_user_id = {value.repost_user_id}
-                reposted_by = {value.reposted_by}
+                repostsCount={value.repostsCount}
+                repost_id={value.repost_id}
+                repost_user_id={value.repost_user_id}
+                reposted_by={value.reposted_by}
                 callApi={callApi}
                 setCallApi={setCallApi}
                 getPosts={getPosts}
