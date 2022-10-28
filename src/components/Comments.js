@@ -33,4 +33,9 @@ const Wrapper = styled.div`
     border-bottom-left-radius: 16px;
     border-bottom-right-radius: 16px;
     background-color: #1E1E1E;
+
+    @media (max-width: 850px) {
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
 `;
