@@ -38,8 +38,13 @@ export default function Post({
   const config = { headers: { Authorization: `Bearer ${userData.token}` } };
   const userId = JSON.parse(localStorage.getItem("user")).user_id;
   const navigate = useNavigate();
+<<<<<<< HEAD
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const msgToolTipId = repost_user_id ? `${repost_id}` : `${postId}`;
+=======
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const msgToolTipId = `${postId}`
+>>>>>>> main
 
   useEffect(() => {
     setLike(liked);
