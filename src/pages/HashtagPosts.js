@@ -11,16 +11,27 @@ import {
   LoadMessage,
 } from "../components/Timeline";
 import { UserContext } from "../contexts/UserContext";
-import { getHashtag } from "../services/services";
+import { getHashtag, getPostsData } from "../services/services";
 import listPosts from "../helpers/listPosts";
 
 export default function HashtagPosts() {
-  const { posts, userData, setPosts, message } = useContext(UserContext);
+  const { posts, userData, setPosts, message, postEdition } =
+    useContext(UserContext);
   const { hashtag } = useParams();
   const [listPostsId, setListPostsId] = useState([]);
+  const userToken =
+    JSON.parse(localStorage.getItem("user")).token || userData.token;
+
+  async function getPosts() {
+    const config = { headers: { Authorization: `Bearer ${userToken}` } };
+    const allPosts = await getPostsData(config);
+    setPosts(allPosts.data);
+    console.log(allPosts.data);
+  }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
+    getPosts();
     try {
       const promise = getHashtag(
         JSON.parse(localStorage.getItem("user")).token || userData.token,
@@ -38,7 +49,7 @@ export default function HashtagPosts() {
     } catch (error) {
       console.log(error);
     }
-  }, [hashtag]);
+  }, [hashtag, postEdition]);
 
   const hashtagPosts = [];
 
@@ -78,6 +89,7 @@ export default function HashtagPosts() {
                   messageToolTip={value.messageToolTip}
                   callApi={callApi}
                   setCallApi={setCallApi}
+                  getPosts={getPosts}
                 />
               ))
             ) : (

@@ -16,18 +16,23 @@ export default function PostContents({
   const navigate = useNavigate();
 
   function goUserPage() {
-    localStorage.setItem("userPage", JSON.stringify({name: username, userId: post_userId, userImage: picture_url}))
-    navigate(`/users/${post_userId}`)
+    localStorage.setItem(
+      "userPage",
+      JSON.stringify({
+        name: username,
+        userId: post_userId,
+        userImage: picture_url,
+      })
+    );
+    navigate(`/users/${post_userId}`);
   }
   return (
     <Contents>
-      <UserName onClick={goUserPage}>
-        {username}
-      </UserName>
+      <UserName onClick={goUserPage}>{username}</UserName>
 
-      <Body 
-        body={body} 
-        post_id={post_id} 
+      <Body
+        body={body}
+        post_id={post_id}
         post_userId={post_userId}
         callApi={callApi}
         setCallApi={setCallApi}
