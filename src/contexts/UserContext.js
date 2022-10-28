@@ -9,6 +9,7 @@ const UserStorage = ({ children }) => {
   const [message, setMessage] = useState("Loading...");
   const [userId, setUserId] = useState();
   const [postEdition, setPostEdition] = useState(false);
+  const [page, setPage] = useState(1)
   return (
     <UserContext.Provider
       value={{
@@ -24,6 +25,8 @@ const UserStorage = ({ children }) => {
         setUserId,
         postEdition,
         setPostEdition,
+        page, 
+        setPage
       }}
     >
       {children}

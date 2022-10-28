@@ -5,6 +5,11 @@ import { getFollowedList, getPostsData } from "../services/services";
 import { UserContext } from "../contexts/UserContext";
 import Publish from "./Publish";
 import HashtagList from "./HashtagsList.js";
+import NewPostsButton from "./NewPostsButton";
+import useInterval from "use-interval";
+import InfiniteScroll from "react-infinite-scroll-component";
+import ReactLoading from "react-loading";
+
 
 export default function Timeline() {
   const {
@@ -16,11 +21,12 @@ export default function Timeline() {
     followedPosts,
     setFollowedPosts,
     postEdition,
+    page,
+    setPage
   } = useContext(UserContext);
 
   const [callApi, setCallApi] = useState(true);
   const [hasMore, setHasMore] = useState(true);
-  const [page, setPage] = useState(1);
   const userToken =
     JSON.parse(localStorage.getItem("user")).token || userData.token;
   const config = { headers: { Authorization: `Bearer ${userToken}` } };
@@ -34,7 +40,6 @@ export default function Timeline() {
   };
 
   const getPosts = () => {
-    
     
     getPostsData(page, config)
       .then((res) => {
