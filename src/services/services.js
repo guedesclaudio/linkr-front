@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrlTest = "http://localhost:5000"; //url de teste
+const baseUrlTest = "https://linkr-backend-api.herokuapp.com"; //url de teste http://localhost:5000
 const baseUrlProduction = "https://linkr-backend-api.herokuapp.com"; //url de producao
 
 function getPostsData(pageValue, config) {
