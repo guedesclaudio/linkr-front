@@ -1,9 +1,13 @@
 <div align="center">
   <h1>LINKR</h1>
   <br>
-  - Front-end de uma rede social para compartilhamento de links. Esse é um projeto full stack e criado em colaboração com mais 3 colegas. <a href = "https://github.com/guedesclaudio/linkr-back">Repositório do front-end</a>
+  - Front-end de uma rede social para compartilhamento de links. Esse é um projeto full stack e criado em colaboração com mais 3 colegas. <a href = "https://github.com/guedesclaudio/linkr-back">Repositório do back-end</a>
   <br>
   <br>
+  <a href = "http://linkr-gules-sigma.vercel.app/">
+    <img src = "./layout-linkr.png" width = 600/>
+    <p>Clique na imagem para acessar a página</p>
+  </a>
 </div>
 <br>
   
